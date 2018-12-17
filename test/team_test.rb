@@ -21,7 +21,7 @@ class TeamTest < Minitest::Test
   end
 
   def test_it_has_a_franchise_id
-    assert_equal 23, @team.franchiseId
+    assert_equal 23, @team.franchise_id
   end
 
   def test_it_has_a_short_name
@@ -29,7 +29,7 @@ class TeamTest < Minitest::Test
   end
 
   def test_it_has_a_team_name
-    assert_equal "Devils", @team.name
+    assert_equal "Devils", @team.team_name
   end
 
   def test_it_has_an_abbreviation
