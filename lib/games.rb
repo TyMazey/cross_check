@@ -1,10 +1,13 @@
 require_relative './game'
 
 class Games
-  attr_reader :all_games
 
   def initialize
-    @all_games = []
+    @games = []
+  end
+
+  def all
+    @games
   end
 
   def create(attributes)
@@ -21,5 +24,5 @@ class Games
     @all_games.find_all do |game|
       game.season == id
     end
-  end 
+  end
 end
