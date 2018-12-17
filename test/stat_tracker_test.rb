@@ -12,14 +12,14 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_exists
-    skip
+    #skip
     stat_tracker = StatTracker.new
 
     assert_instance_of StatTracker, stat_tracker
   end
 
   def test_from_csv_returns_an_instance_of_stat_tracker
-    skip
+    #skip
     stat_tracker = StatTracker.from_csv(@locations)
 
     assert_instance_of StatTracker, stat_tracker
@@ -28,6 +28,9 @@ class StatTrackerTest < Minitest::Test
   def test_it_can_return_file_informaiton
     skip
     stat_tracker = StatTracker.from_csv(@locations)
+
+
+    assert_equal
   end
 
 end
