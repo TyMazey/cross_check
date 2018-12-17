@@ -26,11 +26,13 @@ class TeamsTest < Minitest::Test
     @teams.create(@attributes)
 
     assert_equal "Devils", @teams.find_by_id(1).team_name
+    assert_nil @teams.find_by_id(32)
   end
 
   def test_it_can_find_teams_by_franchise_id
-    @teams.create(@attribures)
+    @teams.create(@attributes)
 
     assert_equal "Devils", @teams.find_by_franchise_id(23).team_name
+    assert_nil @teams.find_by_franchise_id(32)
   end
 end
