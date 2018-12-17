@@ -26,11 +26,14 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_return_file_informaiton
-    skip
+    # skip
     stat_tracker = StatTracker.from_csv(@locations)
 
 
-    assert_equal
+    assert_equal 1, stat_tracker.teams.all.count
+    assert_instance_of Team, stat_tracker.teams.all.first
   end
+
+
 
 end

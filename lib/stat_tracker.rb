@@ -23,17 +23,10 @@ class StatTracker
 
   def generate_hash_from_CSV(file_path)
     file = File.new(file_path)
-    csv = CSV.new(file)
+    csv = CSV.new(file, headers: true, header_converters: :symbol)
     lines = csv.read
-    headers = headers_to_sym(lines.delete_at(0))
-    game_hashes = lines.map do |line|
-      headers.zip(line).to_h
-    end
-  end
-
-  def headers_to_sym(headers)
-    headers.map do |header|
-      header.to_sym
+    lines.map do |line|
+      line.to_h
     end
   end
 
@@ -49,7 +42,6 @@ class StatTracker
     teams_info.each do |team|
       @teams.create(team)
     end
-    binding.pry
   end
 
 
