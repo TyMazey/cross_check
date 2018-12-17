@@ -1,0 +1,27 @@
+require_relative 'test_helper'
+
+class TeamTest < Minitest::Test
+
+  def setup
+    attributes = {team_id: "1",
+                  franchiseId: "23",
+                  shortName: "New Jersey",
+                  teamName: "Devils",
+                  abbreviation: "NJD",
+                  link: "/api/v1/teams/1"}
+    @team = Team.new(attributes)
+  end
+
+  def test_it_exists
+    assert_instance_of Team, @team
+  end
+
+  def test_it_has_an_id
+    assert_equal 1, @team.id
+  end
+
+  def test_it_has_a_franchise_id
+    assert_equal 23, @team.franchiseId
+  end
+
+end
