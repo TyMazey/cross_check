@@ -24,4 +24,12 @@ class TeamTest < Minitest::Test
     assert_equal 23, @team.franchiseId
   end
 
+  def test_it_has_a_short_name
+    assert_equal "New Jersey", @team.short_name
+  end
+
+  def test_it_has_a_team_name
+    assert_equal "Devils", @team.name
+  end
+
 end
