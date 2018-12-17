@@ -32,4 +32,12 @@ class TeamTest < Minitest::Test
     assert_equal "Devils", @team.name
   end
 
+  def test_it_has_an_abbreviation
+    assert_equal "NJD", @team.abbreviation
+  end
+
+  def test_it_has_a_link
+    assert_equal "/api/v1/teams/1", @team.link
+  end
+
 end
