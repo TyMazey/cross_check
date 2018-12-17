@@ -12,12 +12,14 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_exists
+    skip
     stat_tracker = StatTracker.new
 
     assert_instance_of StatTracker, stat_tracker
   end
 
   def test_from_csv_returns_an_instance_of_stat_tracker
+    skip
     stat_tracker = StatTracker.from_csv(@locations)
 
     assert_instance_of StatTracker, stat_tracker
