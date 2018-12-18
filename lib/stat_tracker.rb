@@ -204,8 +204,4 @@ class StatTracker
     @teams.find_by_id(highest_team.first).team_name
   end
 
-  def best_fans
-    @teams.
-  end
-
 end
