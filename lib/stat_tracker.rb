@@ -148,4 +148,12 @@ class StatTracker
     @teams.all.count
   end
 
+  def goals_by_team
+    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+      goals_by_team_id[game.away_team_id] += game.away_goals
+      goals_by_team_id[game.home_team_id] += game.home_goals
+      goals_by_team_id
+    end
+  end
+
 end
