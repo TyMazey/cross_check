@@ -53,6 +53,26 @@ class StatTrackerTest < Minitest::Test
     assert_equal "TD Garden", stat_tracker.least_popular_venue
   end
 
+  def test_it_can_determine_season_with_most_games
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 20122013, stat_tracker.season_with_most_games
+  end
+
+  def test_it_can_determine_season_with_least_games
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 20122013, stat_tracker.season_with_least_games
+  end
+
+  def test_it_can_count_games_by_season
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    expected = {20122013 => 2}
+
+    assert_equal expected, stat_tracker.count_of_games_by_season
+  end
+
 
 
 end
