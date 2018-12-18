@@ -23,13 +23,13 @@ class GamesTest < Minitest::Test
 
   def test_it_starts_with_no_games
 
-    assert_equal [], @games.all_games
+    assert_equal [], @games.all
   end
 
   def test_it_can_create_a_new_game
     game = @games.create(@attributes)
 
-    assert_equal game, @games.all_games
+    assert_equal game, @games.all
   end
 
   def test_it_can_search_for_games_by_id
@@ -53,6 +53,6 @@ class GamesTest < Minitest::Test
   @games.create(attributes_2)
 
 
-    assert_equal [@games.all_games.first], @games.find_by_season_id("20122013")
+    assert_equal [@games.all.first], @games.find_by_season_id("20122013")
   end
 end
