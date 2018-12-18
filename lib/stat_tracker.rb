@@ -78,6 +78,13 @@ class StatTracker
     season.first
   end
 
+  def count_of_games_by_season
+    seasons = group_games_by_season
+    seasons.each do |season, games|
+       seasons[season] = games.count
+    end
+  end
+
   def group_games_by_season
     @games.all.group_by do |game|
       game.season
