@@ -161,7 +161,14 @@ class StatTracker
       total_goals
     end
 
-    test = @teams.find_by_id(highest_scoring.first).team_name
+    @teams.find_by_id(highest_scoring.first).team_name
   end
 
+  def worst_offense
+    lowest_scoring = goals_by_team.min_by do |team_id, total_goals|
+      total_goals
+    end
+
+    @teams.find_by_id(lowest_scoring.first).team_name
+  end
 end

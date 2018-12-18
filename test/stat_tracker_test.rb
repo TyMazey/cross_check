@@ -24,7 +24,7 @@ class StatTrackerTest < Minitest::Test
 
   def test_it_can_return_file_informaiton
     # skip
-    assert_equal 2, @stat_tracker.teams.all.count
+    assert_equal 3, @stat_tracker.teams.all.count
     assert_instance_of Team, @stat_tracker.teams.all.first
   end
 
@@ -87,7 +87,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_count_teams
-    assert_equal 2, @stat_tracker.count_of_teams
+    assert_equal 3, @stat_tracker.count_of_teams
   end
 
   def test_it_can_count_goals_scored_by_team
@@ -102,7 +102,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_team_with_least_goals_scored
-    skip
+    # skip
     assert_equal "Rangers", @stat_tracker.worst_offense
   end
 
