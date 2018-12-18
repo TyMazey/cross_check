@@ -25,4 +25,16 @@ class Games
       game.season == id
     end
   end
+
+  def find_all_by_away_team_id(id)
+    @games.find_all do |game|
+      game.away_team_id == id
+    end
+  end
+
+  def find_all_by_home_team_id(id)
+    @games.find_all do |game|
+      game.home_team_id == id
+    end
+  end
 end
