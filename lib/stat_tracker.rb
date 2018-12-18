@@ -7,7 +7,6 @@ class StatTracker
   attr_reader :games,
               :teams
 
-
   def initialize
     @games = Games.new
     @teams = Teams.new
@@ -85,6 +84,52 @@ class StatTracker
     away = "away win"
     calc_wins(away)
   end
+  
+  def most_popular_venue
+    top_venue = group_games_by_venue.max_by do |venue, games|
+      games.count
+    end
+    top_venue.first
+  end
 
+  def least_popular_venue
+    bottom_venue = group_games_by_venue.min_by do |venue, games|
+      games.count
+    end
+    bottom_venue.first
+  end
+
+  def group_games_by_venue
+    @games.all.group_by do |game|
+      game.venue
+    end
+  end
+
+  def season_with_most_games
+    season = group_games_by_season.max_by do |season, games|
+      games.count
+    end
+    season.first
+  end
+
+  def season_with_least_games
+    season = group_games_by_season.min_by do |season, games|
+      games.count
+    end
+    season.first
+  end
+
+  def count_of_games_by_season
+    seasons = group_games_by_season
+    seasons.each do |season, games|
+       seasons[season] = games.count
+    end
+  end
+
+  def group_games_by_season
+    @games.all.group_by do |game|
+      game.season
+    end
+  end
 
 end
