@@ -40,6 +40,12 @@ class StatTrackerTest < Minitest::Test
     assert_equal 7, stat_tracker.highest_total_score
   end
 
+  def test_it_can_find_lowest_sum_of_goals_for_a_game
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 5, stat_tracker.lowest_total_score
+  end
+
 
 
 end
