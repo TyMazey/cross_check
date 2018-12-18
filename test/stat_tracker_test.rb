@@ -124,6 +124,10 @@ class StatTrackerTest < Minitest::Test
     assert_equal "Rangers", @stat_tracker.worst_defense
   end
 
+  def test_it_can_determine_team_with_highest_win_percentage
+    assert_equal "Bruins", @stat_tracker.winningest_team
+  end
+
   def test_it_can_find_the_highest_scoring_visitor
     stat_tracker = StatTracker.from_csv(@locations)
 

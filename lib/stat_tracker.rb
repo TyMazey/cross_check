@@ -75,6 +75,15 @@ class StatTracker
     ((wins.count.to_f / @games.all.count) * 100.0).round(2)
   end
 
+  def calculate_win_percentage(id, games)
+    wins = games.count do |game|
+      (game.outcome.include?("home") && game.home_team_id == id) ||
+      (game.outcome.include?("away") && game.away_team_id == id)
+    end
+    return (wins.to_f / games.count * 100.0) unless games.count == 0
+    return 0.0
+  end
+
   def percentage_home_wins
     home = "home win"
     calc_wins(home)
@@ -103,6 +112,16 @@ class StatTracker
     @games.all.group_by do |game|
       game.venue
     end
+  end
+
+  def group_games_by_team
+    games_by_team = {}
+    @teams.all.each do |team|
+      games_by_team[team.id] = @games.all.find_all do |game|
+        game.home_team_id == team.id || game.away_team_id == team.id
+      end
+    end
+    games_by_team
   end
 
   def season_with_most_games
@@ -256,4 +275,11 @@ class StatTracker
     @teams.find_by_id(most_allowed.first).team_name
   end
 
+  def winningest_team
+    team_games = group_games_by_team
+    team_games.each do |team_id, games|
+      team_games[team_id] = calculate_win_percentage(team_id, games)
+    end
+    @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
+  end
 end
