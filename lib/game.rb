@@ -11,7 +11,7 @@ class Game
               :venue
 
   def initialize(attributes)
-    @game_id = attributes[:game_id]to_i
+    @game_id = attributes[:game_id].to_i
     @season = attributes[:season].to_i
     @type = attributes[:type]
     @date_time = attributes[:date_time]

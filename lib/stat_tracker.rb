@@ -64,7 +64,25 @@ class StatTracker
     end
   end
 
+  def season_with_most_games
+    season = group_games_by_season.max_by do |season, games|
+      games.count
+    end
+    season.first
+  end
 
+  def season_with_least_games
+    season = group_games_by_season.min_by do |season, games|
+      games.count
+    end
+    season.first
+  end
+
+  def group_games_by_season
+    @games.all.group_by do |game|
+      game.season
+    end
+  end
 
 
 end
