@@ -144,21 +144,6 @@ class StatTracker
     end
   end
 
-  # def average_goals_per_game_by_team
-  #   teams_and_avg = []
-  #   @teams.all.each do |team|
-  #     games_team_played = @games.find_all_by_away_team_id(id)
-  #     total = games_team_played.sum {|game| game.away_goals}
-  #     avg_goals = 0
-  #     avg_goals = totals / games_team_played.count.to_f unless totals == 0
-  #     teams_and_avg.push([team.id, avg_goals])
-  #   end
-  #   win = teams_and_avg.max_by do |team, goals|
-  #     goals
-  #   end
-  #   @teams.find_by_id(win[0]).team_name
-  # end
-
   def group_teams_by_away_games
     grouped_values = {}
     @teams.all.each do |team|
@@ -182,8 +167,6 @@ class StatTracker
       0
     end
   end
-
-
 
   def highest_scoring_visitor
     teams_away_goals = {}
@@ -219,6 +202,10 @@ class StatTracker
     end
     highest_team = teams_home_goals.min_by {|team, average_goals| average_goals}
     @teams.find_by_id(highest_team.first).team_name
+  end
+
+  def best_fans
+    @teams.
   end
 
 end
