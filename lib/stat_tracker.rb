@@ -7,7 +7,6 @@ class StatTracker
   attr_reader :games,
               :teams
 
-
   def initialize
     @games = Games.new
     @teams = Teams.new
@@ -44,6 +43,48 @@ class StatTracker
     end
   end
 
+  def get_total_scores
+    @games.all.map do |game|
+      game.away_goals + game.home_goals
+    end
+  end
+
+  def highest_total_score
+    get_total_scores.max
+  end
+
+  def lowest_total_score
+    get_total_scores.min
+  end
+
+  def calc_blowout(game)
+    (game.home_goals - game.away_goals).abs
+  end
+
+  def biggest_blowout
+    highest_blowout = @games.all.max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(highest_blowout)
+  end
+
+  def calc_wins(where)
+    wins = @games.all.find_all do |game|
+      game.outcome.include?(where)
+    end
+    (wins.count / @games.all.count) * 100.0
+  end
+
+  def percentage_home_wins
+    home = "home win"
+    calc_wins(home)
+  end
+
+  def percentage_away_wins
+    away = "away win"
+    calc_wins(away)
+  end
+  
   def most_popular_venue
     top_venue = group_games_by_venue.max_by do |venue, games|
       games.count
@@ -90,6 +131,5 @@ class StatTracker
       game.season
     end
   end
-
 
 end
