@@ -93,7 +93,13 @@ class StatTrackerTest < Minitest::Test
   def test_it_can_count_goals_scored_by_team
     expected = {6 => 8, 3 => 4}
 
-    assert_equal expected, @stat_tracker.goals_by_team
+    assert_equal expected, @stat_tracker.goals_scored_by_team
+  end
+
+  def test_it_can_count_goals_allowed_by_team
+    expected = {3 => 8, 6 => 4}
+
+    assert_equal expected, @stat_tracker.goals_allowed_by_team
   end
 
   def test_it_can_determine_team_with_most_goals_scored
@@ -107,12 +113,12 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_team_with_least_goals_allowed
-    skip
-    assert_equal "Rangers", @stat_tracker.best_defense
+    # skip
+    assert_equal "Bruins", @stat_tracker.best_defense
   end
 
   def test_it_can_determine_team_with_most_goals_allowed
-    skip
+    # skip
     assert_equal "Rangers", @stat_tracker.worst_defense
   end
 

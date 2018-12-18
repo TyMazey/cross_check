@@ -148,7 +148,7 @@ class StatTracker
     @teams.all.count
   end
 
-  def goals_by_team
+  def goals_scored_by_team
     @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.away_goals
       goals_by_team_id[game.home_team_id] += game.home_goals
@@ -156,8 +156,16 @@ class StatTracker
     end
   end
 
+  def goals_allowed_by_team
+    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+      goals_by_team_id[game.away_team_id] += game.home_goals
+      goals_by_team_id[game.home_team_id] += game.away_goals
+      goals_by_team_id
+    end
+  end
+
   def best_offense
-    highest_scoring = goals_by_team.max_by do |team_id, total_goals|
+    highest_scoring = goals_scored_by_team.max_by do |team_id, total_goals|
       total_goals
     end
 
@@ -165,10 +173,27 @@ class StatTracker
   end
 
   def worst_offense
-    lowest_scoring = goals_by_team.min_by do |team_id, total_goals|
+    lowest_scoring = goals_scored_by_team.min_by do |team_id, total_goals|
       total_goals
     end
 
     @teams.find_by_id(lowest_scoring.first).team_name
   end
+
+  def best_defense
+    least_allowed = goals_allowed_by_team.min_by do |team_id, total_goals|
+      total_goals
+    end
+
+    @teams.find_by_id(least_allowed.first).team_name
+  end
+
+  def worst_defense
+    most_allowed = goals_allowed_by_team.max_by do |team_id, total_goals|
+      total_goals
+    end
+
+    @teams.find_by_id(most_allowed.first).team_name
+  end
+
 end
