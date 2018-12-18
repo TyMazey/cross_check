@@ -58,5 +58,33 @@ class StatTracker
     get_total_scores.min
   end
 
+  def calc_blowout(game)
+    (game.home_goals - game.away_goals).abs
+  end
+
+  def biggest_blowout
+    highest_blowout = @games.all.max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(highest_blowout)
+  end
+
+  def calc_wins(where)
+    wins = @games.all.find_all do |game|
+      game.outcome.include?(where)
+    end
+    (wins.count / @games.all.count) * 100.0
+  end
+
+  def percentage_home_wins
+    home = "home win"
+    calc_wins(home)
+  end
+
+  def percentage_away_wins
+    away = "away win"
+    calc_wins(away)
+  end
+
 
 end

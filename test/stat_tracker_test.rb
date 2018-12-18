@@ -46,6 +46,23 @@ class StatTrackerTest < Minitest::Test
     assert_equal 5, stat_tracker.lowest_total_score
   end
 
+  def test_it_can_find_biggest_goal_disparity_of_winner_and_loser_in_game
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 3, stat_tracker.biggest_blowout
+  end
+
+  def test_it_can_find_precentage_of_games_home_teams_have_won
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 100.0, stat_tracker.percentage_home_wins
+  end
+
+  def test_it_can_find_precentage_of_games_away_teams_have_won
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 0.0, stat_tracker.percentage_away_wins
+  end
 
 
 end
