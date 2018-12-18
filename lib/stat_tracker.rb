@@ -43,18 +43,18 @@ class StatTracker
     end
   end
 
-  def get_total_scores
-    @games.all.map do |game|
+  def get_total_scores(games)
+    games.map do |game|
       game.away_goals + game.home_goals
     end
   end
 
   def highest_total_score
-    get_total_scores.max
+    get_total_scores(@games.all).max
   end
 
   def lowest_total_score
-    get_total_scores.min
+    get_total_scores(@games.all).min
   end
 
   def calc_blowout(game)
@@ -72,7 +72,7 @@ class StatTracker
     wins = @games.all.find_all do |game|
       game.outcome.include?(where)
     end
-    (wins.count / @games.all.count) * 100.0
+    ((wins.count.to_f / @games.all.count) * 100.0).round(2)
   end
 
   def percentage_home_wins
@@ -84,7 +84,7 @@ class StatTracker
     away = "away win"
     calc_wins(away)
   end
-  
+
   def most_popular_venue
     top_venue = group_games_by_venue.max_by do |venue, games|
       games.count
@@ -117,6 +117,18 @@ class StatTracker
       games.count
     end
     season.first
+  end
+
+  def average_goals_per_game
+    (get_total_scores(@games.all).sum.to_f / @games.all.count).round(2)
+  end
+
+  def average_goals_by_season
+    seasons = group_games_by_season
+    seasons.each do |season, games|
+      seasons[season] = (get_total_scores(games).sum.to_f / games.count).round(2)
+    end
+    seasons
   end
 
   def count_of_games_by_season

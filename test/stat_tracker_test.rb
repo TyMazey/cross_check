@@ -102,4 +102,18 @@ class StatTrackerTest < Minitest::Test
     assert_equal expected, stat_tracker.count_of_games_by_season
   end
 
+  def test_it_can_determine_average_goals_per_game
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 6.00, stat_tracker.average_goals_per_game
+  end
+
+  def test_it_can_determine_average_goals_per_game_by_season
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    expected = {20122013 => 6.0}
+
+    assert_equal expected, stat_tracker.average_goals_by_season
+  end
+
 end
