@@ -122,4 +122,8 @@ class StatTrackerTest < Minitest::Test
     assert_equal "Rangers", @stat_tracker.worst_defense
   end
 
+  def test_it_can_determine_team_with_highest_win_percentage
+    assert_equal "Bruins", @stat_tracker.winningest_team
+  end
+
 end
