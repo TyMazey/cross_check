@@ -144,4 +144,81 @@ class StatTracker
     end
   end
 
+  # def average_goals_per_game_by_team
+  #   teams_and_avg = []
+  #   @teams.all.each do |team|
+  #     games_team_played = @games.find_all_by_away_team_id(id)
+  #     total = games_team_played.sum {|game| game.away_goals}
+  #     avg_goals = 0
+  #     avg_goals = totals / games_team_played.count.to_f unless totals == 0
+  #     teams_and_avg.push([team.id, avg_goals])
+  #   end
+  #   win = teams_and_avg.max_by do |team, goals|
+  #     goals
+  #   end
+  #   @teams.find_by_id(win[0]).team_name
+  # end
+
+  def group_teams_by_away_games
+    grouped_values = {}
+    @teams.all.each do |team|
+      grouped_values[team.id] = @games.find_all_by_away_team_id(team.id)
+    end
+    grouped_values
+  end
+
+  def group_teams_by_home_games
+    grouped_values = {}
+    @teams.all.each do |team|
+      grouped_values[team.id] = @games.find_all_by_home_team_id(team.id)
+    end
+    grouped_values
+  end
+
+  def calc_average_goals(games)
+    if games.count != 0
+    games.sum {|game| game.away_goals} / games.count
+    else
+      0
+    end
+  end
+
+
+
+  def highest_scoring_visitor
+    teams_away_goals = {}
+    group_teams_by_away_games.each do |team, games|
+      teams_away_goals[team] = calc_average_goals(games)
+    end
+     highest_team = teams_away_goals.max_by {|team, average_goals| average_goals}
+     @teams.find_by_id(highest_team.first).team_name
+  end
+
+  def highest_scoring_home_team
+    teams_home_goals = {}
+    group_teams_by_home_games.each do |team, games|
+      teams_home_goals[team] = calc_average_goals(games)
+    end
+    highest_team = teams_home_goals.max_by {|team, average_goals| average_goals}
+    @teams.find_by_id(highest_team.first).team_name
+  end
+
+  def lowest_scoring_visitor
+    teams_away_goals = {}
+    group_teams_by_away_games.each do |team, games|
+      teams_away_goals[team] = calc_average_goals(games)
+    end
+    highest_team = teams_away_goals.min_by {|team, average_goals| average_goals}
+    @teams.find_by_id(highest_team.first).team_name
+  end
+
+  def lowest_scoring_home_team
+    teams_home_goals = {}
+    group_teams_by_home_games.each do |team, games|
+      teams_home_goals[team] = calc_average_goals(games)
+    end
+    highest_team = teams_home_goals.min_by {|team, average_goals| average_goals}
+    @teams.find_by_id(highest_team.first).team_name
+  end
+
 end
