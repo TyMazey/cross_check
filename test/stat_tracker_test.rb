@@ -66,6 +66,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_count_games_by_season
+    skip
     stat_tracker = StatTracker.from_csv(@locations)
 
     expected = {20122013 => 2}

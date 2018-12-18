@@ -35,7 +35,7 @@ class GamesTest < Minitest::Test
   def test_it_can_search_for_games_by_id
     game = @games.create(@attributes)
 
-    assert_equal game.first, @games.find_by_id("2012030221")
+    assert_equal game.first, @games.find_by_id(2012030221)
   end
 
   def test_it_can_return_all_games_in_a_season
@@ -53,6 +53,6 @@ class GamesTest < Minitest::Test
   @games.create(attributes_2)
 
 
-    assert_equal [@games.all.first], @games.find_by_season_id("20122013")
+    assert_equal [@games.all.first], @games.find_by_season_id(20122013)
   end
 end
