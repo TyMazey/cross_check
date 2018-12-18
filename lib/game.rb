@@ -7,7 +7,8 @@ class Game
               :home_team_id,
               :away_goals,
               :home_goals,
-              :outcome
+              :outcome,
+              :venue
 
   def initialize(attributes)
     @game_id = attributes[:game_id]
@@ -19,6 +20,7 @@ class Game
     @away_goals = attributes[:away_goals]
     @home_goals = attributes[:home_goals]
     @outcome = attributes[:outcome]
+    @venue = attributes[:venue]
   end
 
 end

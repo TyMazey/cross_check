@@ -44,6 +44,26 @@ class StatTracker
     end
   end
 
+  def most_popular_venue
+    top_venue = group_games_by_venue.max_by do |venue, games|
+      games.count
+    end
+    top_venue.first
+  end
+
+  def least_popular_venue
+    bottom_venue = group_games_by_venue.min_by do |venue, games|
+      games.count
+    end
+    bottom_venue.first
+  end
+
+  def group_games_by_venue
+    @games.all.group_by do |game|
+      game.venue
+    end
+  end
+
 
 
 
