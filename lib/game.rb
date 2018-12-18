@@ -16,8 +16,8 @@ class Game
     @date_time = attributes[:date_time]
     @away_team_id = attributes[:away_team_id]
     @home_team_id = attributes[:home_team_id]
-    @away_goals = attributes[:away_goals]
-    @home_goals = attributes[:home_goals]
+    @away_goals = attributes[:away_goals].to_i
+    @home_goals = attributes[:home_goals].to_i
     @outcome = attributes[:outcome]
   end
 

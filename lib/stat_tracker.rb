@@ -44,7 +44,19 @@ class StatTracker
     end
   end
 
+  def get_total_scores
+    @games.all.map do |game|
+      game.away_goals + game.home_goals
+    end
+  end
 
+  def highest_total_score
+    get_total_scores.max
+  end
+
+  def lowest_total_score
+    get_total_scores.min
+  end
 
 
 end

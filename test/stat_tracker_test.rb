@@ -34,6 +34,12 @@ class StatTrackerTest < Minitest::Test
     assert_instance_of Team, stat_tracker.teams.all.first
   end
 
+  def test_it_can_find_highest_sum_of_goals_for_a_game
+    stat_tracker = StatTracker.from_csv(@locations)
+
+    assert_equal 7, stat_tracker.highest_total_score
+  end
+
 
 
 end
