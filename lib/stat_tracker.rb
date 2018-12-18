@@ -156,4 +156,12 @@ class StatTracker
     end
   end
 
+  def best_offense
+    highest_scoring = goals_by_team.max_by do |team_id, total_goals|
+      total_goals
+    end
+
+    test = @teams.find_by_id(highest_scoring.first).team_name
+  end
+
 end

@@ -97,7 +97,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_team_with_most_goals_scored
-    skip
+    # skip
     assert_equal "Bruins", @stat_tracker.best_offense
   end
 

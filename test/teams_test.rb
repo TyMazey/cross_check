@@ -4,9 +4,9 @@ class TeamsTest < Minitest::Test
 
   def setup
     @attributes = {team_id: "1",
-                  franchiseId: "23",
-                  shortName: "New Jersey",
-                  teamName: "Devils",
+                  franchiseid: "23",
+                  shortname: "New Jersey",
+                  teamname: "Devils",
                   abbreviation: "NJD",
                   link: "/api/v1/teams/1"}
     @teams = Teams.new

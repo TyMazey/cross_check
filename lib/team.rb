@@ -9,9 +9,9 @@ class Team
 
   def initialize(attributes)
     @id = attributes[:team_id].to_i
-    @franchise_id = attributes[:franchiseId].to_i
-    @short_name = attributes[:shortName]
-    @team_name = attributes[:teamName]
+    @franchise_id = attributes[:franchiseid].to_i
+    @short_name = attributes[:shortname]
+    @team_name = attributes[:teamname]
     @abbreviation = attributes[:abbreviation]
     @link = attributes[:link]
   end
