@@ -90,6 +90,12 @@ class StatTrackerTest < Minitest::Test
     assert_equal 2, @stat_tracker.count_of_teams
   end
 
+  def test_it_can_count_goals_scored_by_team
+    expected = {6 => 8, 3 => 4}
+
+    assert_equal expected, @stat_tracker.goals_by_team
+  end
+
   def test_it_can_determine_team_with_most_goals_scored
     skip
     assert_equal "Bruins", @stat_tracker.best_offense
