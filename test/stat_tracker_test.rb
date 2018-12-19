@@ -198,4 +198,8 @@ class StatTrackerTest < Minitest::Test
     assert_equal 20122013, @stat_tracker.worst_season(3)
   end
 
+  def test_it_can_
+
+  end
+
 end
