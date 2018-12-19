@@ -190,6 +190,11 @@ class StatTrackerTest < Minitest::Test
 
   def test_it_can_name_the_opponent_that_loses_most_against_a_team
 
-  assert_equal "Rangers", @stat_tracker.favorite_team(6)  
+    assert_equal "Rangers", @stat_tracker.favorite_team(6)
   end
+
+  def test_it_can_name_the_opponent_that_wins_most_against_a_team
+
+    assert_equal "Bruins", @stat_tracker.rival(3)
+  end 
 end
