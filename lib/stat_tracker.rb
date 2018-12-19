@@ -294,7 +294,7 @@ class StatTracker
     end
     @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
-  
+
   def season_summary(season, team_id)
     summary = group_games_by_season_type(season, team_id)
     generate_season_summary(summary, team_id)
@@ -404,8 +404,8 @@ class StatTracker
       end
     end
     final
-  end 
-  
+  end
+
   def best_fans
     teams_wins = {}
     @teams.all.each do |team|
@@ -426,6 +426,22 @@ class StatTracker
       percentages < 50
     end
     worst_fans.map {|team| team.first.team_name}
+  end
+
+  def collection_of_goals_scored_by_team(team_id)
+    teams_games = group_games_by_team[team_id]
+    goals = teams_games.map do |game|
+      if game.away_team_id == team_id
+        game.away_goals
+      else
+        game.home_goals
+      end
+    end
+    goals
+  end
+
+  def most_goals(team_id)
+    collection_of_goals_scored_by_team(team_id).max
   end
 
 end

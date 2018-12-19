@@ -178,5 +178,8 @@ class StatTrackerTest < Minitest::Test
     assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
   end
 
+  def test_most_goals_scored_for_a_team
 
+    assert_equal 5, @stat_tracker.most_goals(6)
+  end
 end
