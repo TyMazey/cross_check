@@ -37,4 +37,18 @@ class Games
       game.home_team_id == id
     end
   end
+
+  def find_wins_by_team(id)
+    @games.find_all do |game|
+      (game.home_team_id == id && game.outcome.include?("home") ||
+       game.away_team_id == id && game.outcome.include?("away"))
+     end
+  end
+
+  def find_losses_by_team(id)
+    @games.find_all do |game|
+      (game.away_team_id == id && game.outcome.include?("home") ||
+       game.home_team_id == id && game.outcome.include?("away"))
+     end
+   end  
 end
