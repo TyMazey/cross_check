@@ -41,10 +41,10 @@ class TeamTest < Minitest::Test
   end
 
   def test_it_can_return_all_attributes
-    expected =   {team_id: "1",
-                  franchiseid: "23",
-                  shortname: "New Jersey",
-                  teamname: "Devils",
+    expected =   {team_id: 1,
+                  franchiseId: 23,
+                  shortName: "New Jersey",
+                  teamName: "Devils",
                   abbreviation: "NJD",
                   link: "/api/v1/teams/1"}
 

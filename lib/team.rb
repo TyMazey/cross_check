@@ -15,4 +15,15 @@ class Team
     @abbreviation = attributes[:abbreviation]
     @link = attributes[:link]
   end
+
+  def information
+    {
+      team_id: @id,
+      franchiseId: @franchise_id,
+      shortName: @short_name,
+      teamName: @team_name,
+      abbreviation: @abbreviation,
+      link: @link
+    }
+  end
 end
