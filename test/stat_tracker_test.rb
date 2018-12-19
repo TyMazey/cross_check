@@ -155,6 +155,11 @@ class StatTrackerTest < Minitest::Test
   def test_it_can_find_the_team_with_biggest_dif_btween_home_and_away_wins
     stat_tracker = StatTracker.from_csv(@locations)
 
-    assert_equal "Rangers", stat_tracker.best_fans
-  end 
+    assert_equal "Bruins", stat_tracker.best_fans
+  end
+
+  def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
+
+    assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
+  end
 end
