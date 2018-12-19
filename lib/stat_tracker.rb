@@ -461,4 +461,20 @@ class StatTracker
      end
   end
 
+  def biggest_team_blowout(id)
+    biggest_win = @games.find_wins_by_team(id).max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(biggest_win)
+  end
+
+  # Refactor these methods && biggest_blowout to use generic
+
+  def worst_loss(id)
+    biggest_loss = @games.find_losses_by_team(id).max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(biggest_loss)
+  end
+
 end
