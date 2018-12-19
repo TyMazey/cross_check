@@ -306,4 +306,15 @@ class StatTracker
     best_fans.first.team_name
   end
 
+  def worst_fans
+    teams_wins = {}
+    @teams.all.each do |team|
+      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
+    end
+    worst_fans = teams_wins.find_all do |team, percentages|
+      percentages < 50
+    end
+    worst_fans.map {|team| team.first.team_name}
+  end
+
 end

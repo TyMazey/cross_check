@@ -26,7 +26,7 @@ class StatTrackerTest < Minitest::Test
     # skip
     stat_tracker = StatTracker.from_csv(@locations)
 
-    assert_equal 4, stat_tracker.teams.all.count
+    assert_equal 3, stat_tracker.teams.all.count
     assert_instance_of Team, stat_tracker.teams.all.first
   end
 
@@ -89,7 +89,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_count_teams
-    assert_equal 4, @stat_tracker.count_of_teams
+    assert_equal 3, @stat_tracker.count_of_teams
   end
 
   def test_it_can_count_goals_scored_by_team
@@ -160,6 +160,6 @@ class StatTrackerTest < Minitest::Test
 
   def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
 
-    assert_equal "", stat_tracker.worst_fans
+    assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
   end
 end
