@@ -157,4 +157,9 @@ class StatTrackerTest < Minitest::Test
 
     assert_equal "Bruins", stat_tracker.best_fans
   end
+
+  def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
+
+    assert_equal "", stat_tracker.worst_fans
+  end
 end
