@@ -75,13 +75,25 @@ class StatTracker
     ((wins.count.to_f / @games.all.count) * 100.0).round(2)
   end
 
-  def calculate_win_percentage(id, games)
-    wins = games.count do |game|
-      (game.outcome.include?("home") && game.home_team_id == id) ||
-      (game.outcome.include?("away") && game.away_team_id == id)
+  def calc_home_win_percentages(id, games)
+    home_wins = games.count do |game|
+      game.outcome.include?("home") && game.home_team_id == id
     end
-    return (wins.to_f / games.count * 100.0) unless games.count == 0
-    return 0.0
+      return (home_wins.to_f / games.count * 100) unless games.count == 0
+      return 0.0
+  end
+
+  def calc_away_win_percentages(id, games)
+    away_wins = games.count do |game|
+      game.outcome.include?("away") && game.home_team_id == id
+    end
+      return (away_wins.to_f / games.count * 100) unless games.count == 0
+      return 0.0
+  end
+
+  def calculate_win_percentage(id, games)
+    wins = calc_home_win_percentages(id, games) + calc_away_win_percentages(id, games) / 2
+    return wins
   end
 
   def percentage_home_wins
@@ -282,7 +294,7 @@ class StatTracker
     end
     @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
-
+  
   def season_summary(season, team_id)
     summary = group_games_by_season_type(season, team_id)
     generate_season_summary(summary, team_id)
@@ -364,7 +376,6 @@ class StatTracker
     @teams.find_by_id(winner.first).team_name
   end
 
-
   def group_selected_games_by_team(season)
     games_by_team = {}
     season.each do |game|
@@ -393,6 +404,28 @@ class StatTracker
       end
     end
     final
+  end 
+  
+  def best_fans
+    teams_wins = {}
+    @teams.all.each do |team|
+      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
+    end
+    best_fans = teams_wins.max_by do |team, percentages|
+      percentages
+    end
+    best_fans.first.team_name
+  end
+
+  def worst_fans
+    teams_wins = {}
+    @teams.all.each do |team|
+      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
+    end
+    worst_fans = teams_wins.find_all do |team, percentages|
+      percentages < 50
+    end
+    worst_fans.map {|team| team.first.team_name}
   end
 
 end
