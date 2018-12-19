@@ -187,4 +187,9 @@ class StatTrackerTest < Minitest::Test
 
     assert_equal 3, @stat_tracker.fewest_goals(6)
   end
+
+  def test_it_can_name_the_opponent_that_loses_most_against_a_team
+
+  assert_equal "", @stat_tracker.favorite_team(6)  
+  end
 end
