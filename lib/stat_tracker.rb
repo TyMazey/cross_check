@@ -294,7 +294,118 @@ class StatTracker
     end
     @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
+  
+  def season_summary(season, team_id)
+    summary = group_games_by_season_type(season, team_id)
+    generate_season_summary(summary, team_id)
+  end
 
+  def group_games_by_season_type(season, team_id)
+    all_games_in_season = @games.find_by_season_id(season)
+    games_for_team = all_games_in_selection_for_team(team_id, all_games_in_season)
+    games_for_team.group_by {|game| game.type}
+  end
+
+  def all_games_in_selection_for_team(team, selection)
+    selection.find_all do |game|
+      game.home_team_id == team || game.away_team_id == team
+    end
+  end
+
+  def generate_season_summary(grouped_games, team_id)
+    final_summary = Hash.new({})
+    final_summary[:preseason] = generate_summary(grouped_games["P"], team_id)
+    final_summary[:regular_season] = generate_summary(grouped_games["R"], team_id)
+    final_summary
+  end
+
+  def generate_summary(selection, team_id)
+    summary = {}
+    if selection
+      summary[:win_percentage] = calculate_win_percentage(team_id, selection)
+      summary[:goals_scored] = goals_scored_by_team_in_selection(team_id, selection)
+      summary[:goals_against] = goals_allowed_by_team_in_selection(team_id, selection)
+    else
+      summary[:win_percentage] = 0.0
+      summary[:goals_scored] = 0
+      summary[:goals_against] = 0
+    end
+    return summary
+  end
+
+  def goals_scored_by_team_in_selection(team_id, selection)
+    selection.sum do |game|
+      if game.home_team_id == team_id
+        game.home_goals
+      else
+        game.away_goals
+      end
+    end
+  end
+
+  def goals_allowed_by_team_in_selection(team_id, selection)
+    selection.sum do |game|
+      if game.home_team_id == team_id
+        game.away_goals
+      else
+        game.home_goals
+      end
+    end
+  end
+
+  def get_win_ratios_by_season(season)
+    games_in_season = @games.find_by_season_id(season)
+    games_by_team = group_selected_games_by_team(games_in_season)
+    grouped_games_by_type = group_team_games_by_type(games_by_team)
+    batch_map_hash_to_win_percentage(grouped_games_by_type)
+  end
+
+  def biggest_bust(season)
+    win_ratios = get_win_ratios_by_season(season)
+    loser = win_ratios.max_by do |team_id, season_type|
+      (win_ratios[team_id]["P"] - win_ratios[team_id]["R"])
+    end
+    @teams.find_by_id(loser.first).team_name
+  end
+
+  def biggest_surprise(season)
+    win_ratios = get_win_ratios_by_season(season)
+    winner = win_ratios.min_by do |team_id, season_type|
+      win_ratios[team_id]["P"] - win_ratios[team_id]["R"]
+    end
+    @teams.find_by_id(winner.first).team_name
+  end
+
+  def group_selected_games_by_team(season)
+    games_by_team = {}
+    season.each do |game|
+      games_by_team[game.home_team_id] = [] if games_by_team[game.home_team_id] == nil
+      games_by_team[game.home_team_id] << game
+      games_by_team[game.away_team_id] = [] if games_by_team[game.away_team_id] == nil
+      games_by_team[game.away_team_id] << game
+    end
+    games_by_team
+  end
+
+  def group_team_games_by_type(by_team)
+    final = {}
+    by_team.each do |team_id, games|
+      final[team_id] = games.group_by {|game| game.type}
+    end
+    final
+  end
+
+  def batch_map_hash_to_win_percentage(grouped_games)
+    final = {}
+    grouped_games.each do |team_id, by_season|
+      final[team_id] = Hash.new(0.0)
+      by_season.each do |type, games|
+        final[team_id][type] = calculate_win_percentage(team_id, games)
+      end
+    end
+    final
+  end 
+  
   def best_fans
     teams_wins = {}
     @teams.all.each do |team|

@@ -129,33 +129,48 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_the_highest_scoring_visitor
-    stat_tracker = StatTracker.from_csv(@locations)
-
-    assert_equal "Rangers", stat_tracker.highest_scoring_visitor
+    assert_equal "Rangers", @stat_tracker.highest_scoring_visitor
   end
 
   def test_it_can_find_the_highest_scoring_home
-    stat_tracker = StatTracker.from_csv(@locations)
-
-    assert_equal "Bruins", stat_tracker.highest_scoring_home_team
+    assert_equal "Bruins", @stat_tracker.highest_scoring_home_team
   end
 
   def test_it_can_find_the_lowest_scoring_visitor
-    stat_tracker = StatTracker.from_csv(@locations)
-
-    assert_equal "Devils", stat_tracker.lowest_scoring_visitor
+    assert_equal "Devils", @stat_tracker.lowest_scoring_visitor
   end
 
   def test_it_can_find_the_lowest_scoring_home_team
-    stat_tracker = StatTracker.from_csv(@locations)
-
-    assert_equal "Devils", stat_tracker.lowest_scoring_home_team
+    assert_equal "Devils", @stat_tracker.lowest_scoring_home_team
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_home_and_away_wins
-    stat_tracker = StatTracker.from_csv(@locations)
+    assert_equal "Rangers", @stat_tracker.best_fans
+  end
 
-    assert_equal "Bruins", stat_tracker.best_fans
+  def test_it_can_return_a_season_summary_for_a_team
+    expected = {preseason: { win_percentage: 100.0,
+                             goals_scored: 8,
+                             goals_against: 4},
+           regular_season: { win_percentage: 0.0,
+                             goals_scored: 0,
+                             goals_against: 0}
+               }
+
+    assert_equal expected, @stat_tracker.season_summary(20122013, 6)
+  end
+
+  def test_it_can_determine_biggest_bust
+    assert_equal "Bruins", @stat_tracker.biggest_bust(20122013)
+  end
+
+  def test_it_can_determine_biggest_surprise
+    assert_equal "Rangers", @stat_tracker.biggest_surprise(20122013)
+  end
+
+  def test_it_can_determain_best_fans
+    
+    assert_equal "Bruins", @stat_tracker.best_fans
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
