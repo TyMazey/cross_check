@@ -448,4 +448,20 @@ class StatTracker
     collection_of_goals_scored_by_team(team_id).min
   end
 
+  def favorite_team(team_id)
+    teams_games = group_games_by_team[team_id]
+    games_won = Hash.new(0)
+    teams_games.each do |game|
+      if game.outcome.include?("away") && game.away_team_id == team_id
+          games_won[game.home_team_id] += 1
+      elsif game.outcome.include?("home") && game.home_team_id == team_id
+          games_won[game.away_team_id] += 1
+      end
+    end
+    loser = games_won.max_by do |team, times|
+      times
+    end
+    @teams.find_by_id(loser.first).team_name
+  end
+
 end
