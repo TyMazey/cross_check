@@ -153,8 +153,26 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_home_and_away_wins
+    skip
     stat_tracker = StatTracker.from_csv(@locations)
 
     assert_equal "Rangers", stat_tracker.best_fans
-  end 
+  end
+
+  def test_it_can_return_a_season_summary_for_a_team
+    expected = {preseason: { win_percentage: 100.0,
+                             goals_scored: 8,
+                             goals_against: 4},
+           regular_season: { win_percentage: 0.0,
+                             goals_scored: 0,
+                             goals_against: 0}
+               }
+
+    assert_equal expected, @stat_tracker.season_summary(20122013, 6)
+  end
+
+  def test_it_can_determine_biggest_bust
+    assert_equal "Bruins", @stat_tracker.biggest_bust(20122013)
+  end
+
 end
