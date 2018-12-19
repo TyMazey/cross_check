@@ -196,5 +196,13 @@ class StatTrackerTest < Minitest::Test
   def test_it_can_name_the_opponent_that_wins_most_against_a_team
 
     assert_equal "Bruins", @stat_tracker.rival(3)
+  end
+
+  def test_it_can_return_win_and_loss_record_against_specific_opponent
+
+    exact = { wins: 2,
+              losses: 0
+    }
+    assert_equal exact, @stat_tracker.head_to_head(3, 6)
   end 
 end
