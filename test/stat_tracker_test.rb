@@ -177,4 +177,16 @@ class StatTrackerTest < Minitest::Test
 
     assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
   end
+
+  def test_it_can_return_all_team_information_for_a_team
+    expected = {
+                  team_id: 1,
+                  franchiseId: 23,
+                  shortName: "New Jersey",
+                  teamName: "Devils",
+                  abbreviation: "NJD",
+                  link: "/api/v1/teams/1"
+                }
+    assert_equal expected, @stat_tracker.team_info(1)
+  end
 end
