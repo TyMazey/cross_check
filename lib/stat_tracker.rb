@@ -464,4 +464,22 @@ class StatTracker
     @teams.find_by_id(loser.first).team_name
   end
 
+  def rival(team_id)
+    teams_games = group_games_by_team[team_id]
+    games_lost = Hash.new(0)
+    teams_games.each do |game|
+      if game.outcome.include?("away") && game.away_team_id != team_id
+          games_lost[game.away_team_id] += 1
+      elsif game.outcome.include?("home") && game.home_team_id != team_id
+          games_lost[game.home_team_id] += 1
+      end
+    end
+    winner = games_lost.max_by do |team, times|
+      times
+    end
+    @teams.find_by_id(winner.first).team_name
+  end
+
+
+
 end
