@@ -440,8 +440,6 @@ class StatTracker
     goals
   end
 
-  def most_goals(team_id)
-    collection_of_goals_scored_by_team(team_id).max
-  end
+
 
 end
