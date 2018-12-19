@@ -351,7 +351,7 @@ class StatTracker
   def biggest_bust(season)
     win_ratios = get_win_ratios_by_season(season)
     loser = win_ratios.max_by do |team_id, season_type|
-      (win_ratios[team_id]["P"] - win_ratios[team_id]["R"]).abs
+      (win_ratios[team_id]["P"] - win_ratios[team_id]["R"])
     end
     @teams.find_by_id(loser.first).team_name
   end
