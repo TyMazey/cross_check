@@ -198,8 +198,12 @@ class StatTrackerTest < Minitest::Test
     assert_equal 20122013, @stat_tracker.worst_season(3)
   end
 
-  def test_it_can_
+  def test_it_can_determine_biggest_blowout_for_a_team
+    assert_equal 3, @stat_tracker.biggest_team_blowout(6)
+  end
 
+  def test_it_can_determine_biggest_loss_for_a_team
+    assert_equal 3, @stat_tracker.worst_loss(3)
   end
 
 end
