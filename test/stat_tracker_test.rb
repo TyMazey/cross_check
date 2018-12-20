@@ -203,6 +203,6 @@ class StatTrackerTest < Minitest::Test
     exact = { wins: 2,
               losses: 0
     }
-    assert_equal exact, @stat_tracker.head_to_head(3, 6)
-  end 
+    assert_equal exact, @stat_tracker.head_to_head(6, 3)
+  end
 end

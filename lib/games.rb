@@ -50,5 +50,9 @@ class Games
       (game.away_team_id == id && game.outcome.include?("home") ||
        game.home_team_id == id && game.outcome.include?("away"))
      end
-   end  
+   end
+
+   def find_all_games_by_team(id)
+     find_wins_by_team(id) + find_losses_by_team(id)
+   end
 end

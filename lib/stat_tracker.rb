@@ -480,6 +480,43 @@ class StatTracker
     @teams.find_by_id(winner.first).team_name
   end
 
+  # def win_loss_records(team)
+  #   win_loss = {}
+  #   @teams.all.each do |team|
+  #     win_loss[team.id] = {wins: @games.find_wins_by_team(team.id).count},
+  #                     {losses: @games.find_losses_by_team(team.id).count}
+  #   end
+  #   binding.pry
+  # end
+
+  def win_loss_hash(team)
+    games = {}
+    @games.find_all_games_by_team(team).each do |game|
+      if game.home_team_id == team
+        if game.outcome.include?("home")
+          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
+          games[game.away_team_id][:wins] += 1
+        else
+          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
+          games[game.away_team_id][:losses] += 1
+        end
+      else
+        if game.outcome.include?("away")
+          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
+          games[game.home_team_id][:wins] += 1
+        else
+          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
+          games[game.home_team_id][:losses] += 1
+        end
+      end
+    end
+    return games
+  end
+
+  def head_to_head(team, team_against)
+    win_loss_hash(team)[team_against]
+      # binding.pry
+  end
 
 
 end
