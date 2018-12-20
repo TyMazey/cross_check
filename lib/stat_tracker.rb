@@ -449,35 +449,19 @@ class StatTracker
   end
 
   def favorite_team(team_id)
-    teams_games = group_games_by_team[team_id]
-    games_won = Hash.new(0)
-    teams_games.each do |game|
-      if game.outcome.include?("away") && game.away_team_id == team_id
-          games_won[game.home_team_id] += 1
-      elsif game.outcome.include?("home") && game.home_team_id == team_id
-          games_won[game.away_team_id] += 1
-      end
+    team_history = win_loss_hash(team_id)
+    highest_percentage = team_history.max_by do |opponent, history|
+      history[:wins].to_f / history[:losses] * 100.0
     end
-    loser = games_won.max_by do |team, times|
-      times
-    end
-    @teams.find_by_id(loser.first).team_name
+    @teams.find_by_id(highest_percentage.first).team_name
   end
 
   def rival(team_id)
-    teams_games = group_games_by_team[team_id]
-    games_lost = Hash.new(0)
-    teams_games.each do |game|
-      if game.outcome.include?("away") && game.away_team_id != team_id
-          games_lost[game.away_team_id] += 1
-      elsif game.outcome.include?("home") && game.home_team_id != team_id
-          games_lost[game.home_team_id] += 1
-      end
+    team_history = win_loss_hash(team_id)
+    lowest_percentage = team_history.min_by do |opponent, history|
+      history[:wins].to_f / history[:losses] * 100.0
     end
-    winner = games_lost.max_by do |team, times|
-      times
-    end
-    @teams.find_by_id(winner.first).team_name
+    @teams.find_by_id(lowest_percentage.first).team_name 
   end
 
   # def win_loss_records(team)
@@ -515,7 +499,6 @@ class StatTracker
 
   def head_to_head(team, team_against)
     win_loss_hash(team)[team_against]
-      # binding.pry
   end
 
 
