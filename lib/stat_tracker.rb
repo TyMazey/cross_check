@@ -290,18 +290,6 @@ class StatTracker
     generate_season_summary(summary, team_id)
   end
 
-  # def group_games_by_season_type(season, team_id)
-  #   all_games_in_season = @games.find_by_season_id(season)
-  #   games_for_team = all_games_in_selection_for_team(team_id, all_games_in_season)
-  #   games_for_team.group_by {|game| game.type}
-  # end
-
-  def all_games_in_selection_for_team(team, selection)
-    selection.find_all do |game|
-      game.home_team_id == team || game.away_team_id == team
-    end
-  end
-
   def generate_season_summary(grouped_games, team_id)
     final_summary = Hash.new({})
     final_summary[:preseason] = generate_summary(grouped_games["P"], team_id)
@@ -503,15 +491,6 @@ class StatTracker
     @teams.find_by_id(lowest_percentage.first).team_name
   end
 
-  # def win_loss_records(team)
-  #   win_loss = {}
-  #   @teams.all.each do |team|
-  #     win_loss[team.id] = {wins: @games.find_wins_by_team(team.id).count},
-  #                     {losses: @games.find_losses_by_team(team.id).count}
-  #   end
-  #   binding.pry
-  # end
-
   def win_loss_hash(team)
     games = {}
     @games.find_all_by_team(team).each do |game|
@@ -555,7 +534,6 @@ class StatTracker
 
   def populate_missing_info(team_id, summary)
     summary.each do |season, generated_summary|
-      # grouped_games = group_games_by_season_type(season, team_id)
       grouped_games = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
       grouped_games = @games.group_games_by(:type, grouped_games)
       grouped_games.default=([]) # Override default to allow count

@@ -50,12 +50,6 @@ class StatTrackerTest < Minitest::Test
     assert_equal 0.0, @stat_tracker.percentage_away_wins
   end
 
-  def test_it_can_group_games_by_venue
-    skip
-    assert_instance_of Hash, @stat_tracker.group_games_by_venue
-    assert_equal 2, @stat_tracker.group_games_by_venue.values.first.length
-  end
-
   def test_it_can_determine_most_popular_venue
     assert_equal "TD Garden", @stat_tracker.most_popular_venue
   end
