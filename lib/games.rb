@@ -55,4 +55,12 @@ class Games
    def find_all_games_by_team(id)
      find_wins_by_team(id) + find_losses_by_team(id)
    end
+
+   def all_seasons_for_team(id)
+     all_seasons = []
+     find_all_games_by_team(id).each do |game|
+       all_seasons << game.season
+     end
+     all_seasons.uniq
+   end
 end

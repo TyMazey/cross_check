@@ -510,7 +510,7 @@ class StatTracker
     lowest_percentage = team_history.min_by do |opponent, history|
       history[:wins].to_f / history[:losses] * 100.0
     end
-    @teams.find_by_id(lowest_percentage.first).team_name 
+    @teams.find_by_id(lowest_percentage.first).team_name
   end
 
   # def win_loss_records(team)
@@ -549,4 +549,36 @@ class StatTracker
   def head_to_head(team, team_against)
     win_loss_hash(team)[team_against]
   end
+
+  def seasonal_summary(team_id)
+    generate_multi_season_summary(team_id)
+  end
+
+  def generate_multi_season_summary(team_id)
+    summary = {}
+    all_seasons = @games.all_seasons_for_team(team_id)
+    all_seasons.each do |season|
+      summary[season] = season_summary(season, team_id)
+    end
+    populate_missing_info(team_id, summary)
+  end
+
+  def populate_missing_info(team_id, summary)
+    summary.each do |season, generated_summary|
+      grouped_games = group_games_by_season_type(season, team_id)
+      grouped_games.default=([]) # Override default to allow count
+      generated_summary.each do |type, stats|
+        game_count = grouped_games[type.to_s.capitalize[0]].count
+        if game_count == 0
+          stats[:average_goals_scored] = 0.0
+          stats[:average_goals_against] = 0.0
+        else
+          stats[:average_goals_scored] = stats[:goals_scored].to_f / game_count
+          stats[:average_goals_against] = stats[:goals_against].to_f / game_count
+        end
+      end
+    end
+    return summary
+  end
+
 end
