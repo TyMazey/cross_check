@@ -1,8 +1,10 @@
 require 'csv'
 require_relative './games'
 require_relative './teams'
+require_relative './csv_reader'
 
 class StatTracker
+  include CSVReader
 
   attr_reader :games,
               :teams
@@ -13,34 +15,8 @@ class StatTracker
   end
 
   def self.from_csv(locations)
-    stat_tracker = StatTracker.new
-    stat_tracker.load_games(locations[:games]) if locations[:games]
-    stat_tracker.load_teams(locations[:teams]) if locations[:teams]
-    stat_tracker.load_game_teams(locations[:game_teams]) if locations[:game_teams]
-    return stat_tracker
-  end
-
-  def generate_hash_from_CSV(file_path)
-    file = File.new(file_path)
-    csv = CSV.new(file, headers: true, header_converters: :symbol)
-    lines = csv.read
-    lines.map do |line|
-      line.to_h
-    end
-  end
-
-  def load_games(file_path)
-    games_info = generate_hash_from_CSV(file_path)
-    games_info.each do |game|
-      @games.create(game)
-    end
-  end
-
-  def load_teams(file_path)
-    teams_info = generate_hash_from_CSV(file_path)
-    teams_info.each do |team|
-      @teams.create(team)
-    end
+    stat_tracker = self.new
+    stat_tracker.from_csv(locations)
   end
 
   def get_total_scores(games)
@@ -495,19 +471,17 @@ class StatTracker
     games = {}
     @games.find_all_by_team(team).each do |game|
       if game.home_team_id == team
+        games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
         if game.outcome.include?("home")
-          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
           games[game.away_team_id][:wins] += 1
         else
-          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
           games[game.away_team_id][:losses] += 1
         end
       else
+        games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
         if game.outcome.include?("away")
-          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
           games[game.home_team_id][:wins] += 1
         else
-          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
           games[game.home_team_id][:losses] += 1
         end
       end
