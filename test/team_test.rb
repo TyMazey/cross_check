@@ -40,4 +40,15 @@ class TeamTest < Minitest::Test
     assert_equal "/api/v1/teams/1", @team.link
   end
 
+  def test_it_can_return_all_attributes
+    expected =   {team_id: 1,
+                  franchiseId: 23,
+                  shortName: "New Jersey",
+                  teamName: "Devils",
+                  abbreviation: "NJD",
+                  link: "/api/v1/teams/1"}
+
+    assert_equal expected, @team.information
+  end
+
 end

@@ -178,31 +178,56 @@ class StatTrackerTest < Minitest::Test
     assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
   end
 
-  def test_most_goals_scored_for_a_team
+  def test_it_can_return_all_team_information_for_a_team
+    expected = {
+                  team_id: 1,
+                  franchiseId: 23,
+                  shortName: "New Jersey",
+                  teamName: "Devils",
+                  abbreviation: "NJD",
+                  link: "/api/v1/teams/1"
+                }
+    
+    assert_equal expected, @stat_tracker.team_info(1)
+  end
 
+  def test_it_can_determine_best_season_for_team
+    assert_equal 20122013, @stat_tracker.best_season(3)
+  end
+
+  def test_it_can_determine_worst_season_for_team
+    assert_equal 20122013, @stat_tracker.worst_season(3)
+  end
+
+  def test_it_can_determine_biggest_blowout_for_a_team
+    assert_equal 3, @stat_tracker.biggest_team_blowout(6)
+  end
+
+  def test_it_can_determine_biggest_loss_for_a_team
+    assert_equal 3, @stat_tracker.worst_loss(3)
+  end
+
+  def test_most_goals_scored_for_a_team
     assert_equal 5, @stat_tracker.most_goals(6)
   end
 
   def test_fewest_goals_scored_for_a_team
-
     assert_equal 3, @stat_tracker.fewest_goals(6)
   end
 
   def test_it_can_name_the_opponent_that_loses_most_against_a_team
-
     assert_equal "Rangers", @stat_tracker.favorite_team(6)
   end
 
   def test_it_can_name_the_opponent_that_wins_most_against_a_team
-
     assert_equal "Bruins", @stat_tracker.rival(3)
   end
 
   def test_it_can_return_win_and_loss_record_against_specific_opponent
-
     exact = { wins: 2,
               losses: 0
     }
+    
     assert_equal exact, @stat_tracker.head_to_head(6, 3)
   end
 end

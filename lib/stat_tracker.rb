@@ -428,6 +428,55 @@ class StatTracker
     worst_fans.map {|team| team.first.team_name}
   end
 
+  def team_info(id)
+    @teams.find_by_id(id).information
+  end
+
+  def map_season_hash_to_win_percentage(team_id, games_by_season)
+    games_by_season.each do |season, games|
+      games_by_season[season] = calculate_win_percentage(team_id, games)
+    end
+    games_by_season
+  end
+
+  def best_season(team_id)
+    games_by_season = group_games_of_team_by_season(team_id)
+    season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
+    max = season_win_percentage.max_by {|season, percentage| percentage}
+    return max.first
+  end
+
+  def worst_season(team_id)
+    games_by_season = group_games_of_team_by_season(team_id)
+    season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
+    min = season_win_percentage.min_by {|season, percentage| percentage}
+    return min.first
+  end
+
+  def group_games_of_team_by_season(team_id)
+     games_for_team = @games.find_all_by_home_team_id(team_id)
+     games_for_team += @games.find_all_by_away_team_id(team_id)
+     test = games_for_team.group_by do |game|
+       game.season
+     end
+  end
+
+  def biggest_team_blowout(id)
+    biggest_win = @games.find_wins_by_team(id).max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(biggest_win)
+  end
+
+  # Refactor these methods && biggest_blowout to use generic
+
+  def worst_loss(id)
+    biggest_loss = @games.find_losses_by_team(id).max_by do |game|
+      calc_blowout(game)
+    end
+    calc_blowout(biggest_loss)
+  end
+
   def collection_of_goals_scored_by_team(team_id)
     teams_games = group_games_by_team[team_id]
     goals = teams_games.map do |game|
@@ -500,6 +549,4 @@ class StatTracker
   def head_to_head(team, team_against)
     win_loss_hash(team)[team_against]
   end
-
-
 end
