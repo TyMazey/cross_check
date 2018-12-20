@@ -51,6 +51,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_group_games_by_venue
+    skip
     assert_instance_of Hash, @stat_tracker.group_games_by_venue
     assert_equal 2, @stat_tracker.group_games_by_venue.values.first.length
   end

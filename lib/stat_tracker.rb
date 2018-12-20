@@ -107,23 +107,17 @@ class StatTracker
   end
 
   def most_popular_venue
-    top_venue = group_games_by_venue.max_by do |venue, games|
+    top_venue = @games.group_games_by(:venue).max_by do |venue, games|
       games.count
     end
     top_venue.first
   end
 
   def least_popular_venue
-    bottom_venue = group_games_by_venue.min_by do |venue, games|
+    bottom_venue = @games.group_games_by(:venue).min_by do |venue, games|
       games.count
     end
     bottom_venue.first
-  end
-
-  def group_games_by_venue
-    @games.all.group_by do |game|
-      game.venue
-    end
   end
 
   def group_games_by_team
@@ -137,14 +131,14 @@ class StatTracker
   end
 
   def season_with_most_games
-    season = group_games_by_season.max_by do |season, games|
+    season = @games.group_games_by(:season).max_by do |season, games|
       games.count
     end
     season.first
   end
 
   def season_with_least_games
-    season = group_games_by_season.min_by do |season, games|
+    season = @games.group_games_by(:season).min_by do |season, games|
       games.count
     end
     season.first
@@ -155,7 +149,7 @@ class StatTracker
   end
 
   def average_goals_by_season
-    seasons = group_games_by_season
+    seasons = @games.group_games_by(:season)
     seasons.each do |season, games|
       seasons[season] = (get_total_scores(games).sum.to_f / games.count).round(2)
     end
@@ -163,15 +157,9 @@ class StatTracker
   end
 
   def count_of_games_by_season
-    seasons = group_games_by_season
+    seasons = @games.group_games_by(:season)
     seasons.each do |season, games|
        seasons[season] = games.count
-    end
-  end
-
-  def group_games_by_season
-    @games.all.group_by do |game|
-      game.season
     end
   end
 
@@ -296,15 +284,17 @@ class StatTracker
   end
 
   def season_summary(season, team_id)
-    summary = group_games_by_season_type(season, team_id)
+    # summary = group_games_by_season_type(season, team_id)
+    summary = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
+    summary = @games.group_games_by(:type, summary)
     generate_season_summary(summary, team_id)
   end
 
-  def group_games_by_season_type(season, team_id)
-    all_games_in_season = @games.find_by_season_id(season)
-    games_for_team = all_games_in_selection_for_team(team_id, all_games_in_season)
-    games_for_team.group_by {|game| game.type}
-  end
+  # def group_games_by_season_type(season, team_id)
+  #   all_games_in_season = @games.find_by_season_id(season)
+  #   games_for_team = all_games_in_selection_for_team(team_id, all_games_in_season)
+  #   games_for_team.group_by {|game| game.type}
+  # end
 
   def all_games_in_selection_for_team(team, selection)
     selection.find_all do |game|
@@ -524,7 +514,7 @@ class StatTracker
 
   def win_loss_hash(team)
     games = {}
-    @games.find_all_games_by_team(team).each do |game|
+    @games.find_all_by_team(team).each do |game|
       if game.home_team_id == team
         if game.outcome.include?("home")
           games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
@@ -565,7 +555,9 @@ class StatTracker
 
   def populate_missing_info(team_id, summary)
     summary.each do |season, generated_summary|
-      grouped_games = group_games_by_season_type(season, team_id)
+      # grouped_games = group_games_by_season_type(season, team_id)
+      grouped_games = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
+      grouped_games = @games.group_games_by(:type, grouped_games)
       grouped_games.default=([]) # Override default to allow count
       generated_summary.each do |type, stats|
         game_count = grouped_games[type.to_s.capitalize[0]].count
