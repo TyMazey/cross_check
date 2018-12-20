@@ -145,7 +145,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_home_and_away_wins
-    assert_equal "Rangers", @stat_tracker.best_fans
+    assert_equal "Bruins", @stat_tracker.best_fans
   end
 
   def test_it_can_return_a_season_summary_for_a_team
@@ -169,12 +169,40 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determain_best_fans
-    
+
     assert_equal "Bruins", @stat_tracker.best_fans
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
 
     assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
+  end
+
+  def test_most_goals_scored_for_a_team
+
+    assert_equal 5, @stat_tracker.most_goals(6)
+  end
+
+  def test_fewest_goals_scored_for_a_team
+
+    assert_equal 3, @stat_tracker.fewest_goals(6)
+  end
+
+  def test_it_can_name_the_opponent_that_loses_most_against_a_team
+
+    assert_equal "Rangers", @stat_tracker.favorite_team(6)
+  end
+
+  def test_it_can_name_the_opponent_that_wins_most_against_a_team
+
+    assert_equal "Bruins", @stat_tracker.rival(3)
+  end
+
+  def test_it_can_return_win_and_loss_record_against_specific_opponent
+
+    exact = { wins: 2,
+              losses: 0
+    }
+    assert_equal exact, @stat_tracker.head_to_head(6, 3)
   end
 end

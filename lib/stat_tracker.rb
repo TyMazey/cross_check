@@ -294,7 +294,7 @@ class StatTracker
     end
     @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
-  
+
   def season_summary(season, team_id)
     summary = group_games_by_season_type(season, team_id)
     generate_season_summary(summary, team_id)
@@ -404,8 +404,8 @@ class StatTracker
       end
     end
     final
-  end 
-  
+  end
+
   def best_fans
     teams_wins = {}
     @teams.all.each do |team|
@@ -427,5 +427,79 @@ class StatTracker
     end
     worst_fans.map {|team| team.first.team_name}
   end
+
+  def collection_of_goals_scored_by_team(team_id)
+    teams_games = group_games_by_team[team_id]
+    goals = teams_games.map do |game|
+      if game.away_team_id == team_id
+        game.away_goals
+      else
+        game.home_goals
+      end
+    end
+    goals
+  end
+
+  def most_goals(team_id)
+    collection_of_goals_scored_by_team(team_id).max
+  end
+
+  def fewest_goals(team_id)
+    collection_of_goals_scored_by_team(team_id).min
+  end
+
+  def favorite_team(team_id)
+    team_history = win_loss_hash(team_id)
+    highest_percentage = team_history.max_by do |opponent, history|
+      history[:wins].to_f / history[:losses] * 100.0
+    end
+    @teams.find_by_id(highest_percentage.first).team_name
+  end
+
+  def rival(team_id)
+    team_history = win_loss_hash(team_id)
+    lowest_percentage = team_history.min_by do |opponent, history|
+      history[:wins].to_f / history[:losses] * 100.0
+    end
+    @teams.find_by_id(lowest_percentage.first).team_name 
+  end
+
+  # def win_loss_records(team)
+  #   win_loss = {}
+  #   @teams.all.each do |team|
+  #     win_loss[team.id] = {wins: @games.find_wins_by_team(team.id).count},
+  #                     {losses: @games.find_losses_by_team(team.id).count}
+  #   end
+  #   binding.pry
+  # end
+
+  def win_loss_hash(team)
+    games = {}
+    @games.find_all_games_by_team(team).each do |game|
+      if game.home_team_id == team
+        if game.outcome.include?("home")
+          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
+          games[game.away_team_id][:wins] += 1
+        else
+          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
+          games[game.away_team_id][:losses] += 1
+        end
+      else
+        if game.outcome.include?("away")
+          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
+          games[game.home_team_id][:wins] += 1
+        else
+          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
+          games[game.home_team_id][:losses] += 1
+        end
+      end
+    end
+    return games
+  end
+
+  def head_to_head(team, team_against)
+    win_loss_hash(team)[team_against]
+  end
+
 
 end
