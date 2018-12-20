@@ -199,38 +199,42 @@ class StatTracker
     end
   end
 
-  def highest_scoring_visitor
+  def goals_for_visitors
     teams_away_goals = {}
     group_teams_by_away_games.each do |team, games|
       teams_away_goals[team] = calc_average_goals(games)
     end
+    teams_away_goals
+  end
+
+  def goals_for_home_teams
+    teams_home_goals = {}
+    group_teams_by_home_games.each do |team, games|
+      teams_home_goals[team] = calc_average_goals(games)
+    end
+    teams_home_goals
+  end
+
+  def highest_scoring_visitor
+    teams_away_goals = goals_for_visitors
      highest_team = teams_away_goals.max_by {|team, average_goals| average_goals}
      @teams.find_by_id(highest_team.first).team_name
   end
 
   def highest_scoring_home_team
-    teams_home_goals = {}
-    group_teams_by_home_games.each do |team, games|
-      teams_home_goals[team] = calc_average_goals(games)
-    end
+    teams_home_goals = goals_for_home_teams
     highest_team = teams_home_goals.max_by {|team, average_goals| average_goals}
     @teams.find_by_id(highest_team.first).team_name
   end
 
   def lowest_scoring_visitor
-    teams_away_goals = {}
-    group_teams_by_away_games.each do |team, games|
-      teams_away_goals[team] = calc_average_goals(games)
-    end
+    teams_away_goals = goals_for_visitors
     highest_team = teams_away_goals.min_by {|team, average_goals| average_goals}
     @teams.find_by_id(highest_team.first).team_name
   end
 
   def lowest_scoring_home_team
-    teams_home_goals = {}
-    group_teams_by_home_games.each do |team, games|
-      teams_home_goals[team] = calc_average_goals(games)
-    end
+    teams_home_goals = goals_for_home_teams
     highest_team = teams_home_goals.min_by {|team, average_goals| average_goals}
     @teams.find_by_id(highest_team.first).team_name
   end
@@ -510,7 +514,7 @@ class StatTracker
     lowest_percentage = team_history.min_by do |opponent, history|
       history[:wins].to_f / history[:losses] * 100.0
     end
-    @teams.find_by_id(lowest_percentage.first).team_name 
+    @teams.find_by_id(lowest_percentage.first).team_name
   end
 
   # def win_loss_records(team)
