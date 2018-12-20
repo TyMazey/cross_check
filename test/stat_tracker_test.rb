@@ -187,7 +187,7 @@ class StatTrackerTest < Minitest::Test
                   abbreviation: "NJD",
                   link: "/api/v1/teams/1"
                 }
-    
+
     assert_equal expected, @stat_tracker.team_info(1)
   end
 
@@ -227,7 +227,22 @@ class StatTrackerTest < Minitest::Test
     exact = { wins: 2,
               losses: 0
     }
-    
+
     assert_equal exact, @stat_tracker.head_to_head(6, 3)
+  end
+  def test_it_can_return_a_season_summary_for_a_team
+    expected = {20122013 => {preseason: { win_percentage: 100.0,
+                                         goals_scored: 8,
+                                         goals_against: 4,
+                                         average_goals_scored: 4.0,
+                                         average_goals_against: 2.0},
+                       regular_season: { win_percentage: 0.0,
+                                         goals_scored: 0,
+                                         goals_against: 0,
+                                         average_goals_scored: 0.0,
+                                         average_goals_against: 0.0}
+                           }}
+
+    assert_equal expected, @stat_tracker.seasonal_summary(6)
   end
 end
