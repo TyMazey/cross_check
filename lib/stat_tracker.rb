@@ -263,7 +263,6 @@ class StatTracker
     highest_scoring = goals_scored_by_team.max_by do |team_id, total_goals|
       total_goals
     end
-
     @teams.find_by_id(highest_scoring.first).team_name
   end
 
@@ -271,7 +270,6 @@ class StatTracker
     lowest_scoring = goals_scored_by_team.min_by do |team_id, total_goals|
       total_goals
     end
-
     @teams.find_by_id(lowest_scoring.first).team_name
   end
 
@@ -279,7 +277,6 @@ class StatTracker
     least_allowed = goals_allowed_by_team.min_by do |team_id, total_goals|
       total_goals
     end
-
     @teams.find_by_id(least_allowed.first).team_name
   end
 
@@ -287,7 +284,6 @@ class StatTracker
     most_allowed = goals_allowed_by_team.max_by do |team_id, total_goals|
       total_goals
     end
-
     @teams.find_by_id(most_allowed.first).team_name
   end
 
