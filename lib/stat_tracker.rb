@@ -444,7 +444,6 @@ class StatTracker
     summary.each do |season, generated_summary|
       grouped_games = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
       grouped_games = @games.group_games_by(:type, grouped_games)
-      grouped_games.default=([]) # Override default to allow count
       generated_summary.each do |type, stats|
         game_count = grouped_games[type.to_s.capitalize[0]].count
         if game_count == 0
