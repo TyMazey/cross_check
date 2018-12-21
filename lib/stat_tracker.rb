@@ -128,22 +128,6 @@ class StatTracker
     end
   end
 
-  # def group_teams_by_away_games
-  #   grouped_values = {}
-  #   @teams.all.each do |team|
-  #     grouped_values[team.id] = @games.find_all_by_away_team_id(team.id)
-  #   end
-  #   grouped_values
-  # end
-  #
-  # def group_teams_by_home_games
-  #   grouped_values = {}
-  #   @teams.all.each do |team|
-  #     grouped_values[team.id] = @games.find_all_by_home_team_id(team.id)
-  #   end
-  #   grouped_values
-  # end
-
   def calc_average_goals(games)
     if games.count != 0
     games.sum {|game| game.away_goals} / games.count
