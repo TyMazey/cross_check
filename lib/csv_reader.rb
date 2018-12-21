@@ -10,7 +10,7 @@ module CSVReader
   def generate_lines_from_CSV(file_path)
     file = File.new(file_path)
     csv = CSV.new(file, headers: true, header_converters: :symbol)
-    lines = csv.read
+    csv.read
   end
 
   def load_games(file_path)

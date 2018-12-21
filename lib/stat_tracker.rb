@@ -19,29 +19,20 @@ class StatTracker
     stat_tracker.from_csv(locations)
   end
 
-  def get_total_scores(games)
-    games.map do |game|
-      game.away_goals + game.home_goals
-    end
-  end
-
   def highest_total_score
-    get_total_scores(@games.all).max
+    @games.get_total_scores(@games.all).max
   end
 
   def lowest_total_score
-    get_total_scores(@games.all).min
+    @games.get_total_scores(@games.all).min
   end
 
   def calc_blowout(game)
     (game.home_goals - game.away_goals).abs
   end
 
-  def biggest_blowout
-    highest_blowout = @games.all.max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(highest_blowout)
+  def biggest_blowout(games = @games.all)
+    calc_blowout(games.max_by {|game| calc_blowout(game)})
   end
 
   def calc_wins(where)
@@ -107,27 +98,25 @@ class StatTracker
   end
 
   def season_with_most_games
-    season = @games.group_games_by(:season).max_by do |season, games|
+    @games.group_games_by(:season).max_by do |season, games|
       games.count
-    end
-    season.first
+    end.first
   end
 
   def season_with_least_games
-    season = @games.group_games_by(:season).min_by do |season, games|
+    @games.group_games_by(:season).min_by do |season, games|
       games.count
-    end
-    season.first
+    end.first
   end
 
-  def average_goals_per_game
-    (get_total_scores(@games.all).sum.to_f / @games.all.count).round(2)
+  def average_goals_per_game(games = @games.all)
+    (@games.get_total_scores(games).sum.to_f / games.count).round(2)
   end
 
   def average_goals_by_season
     seasons = @games.group_games_by(:season)
     seasons.each do |season, games|
-      seasons[season] = (get_total_scores(games).sum.to_f / games.count).round(2)
+      seasons[season] = average_goals_per_game(games)
     end
     seasons
   end
@@ -139,21 +128,21 @@ class StatTracker
     end
   end
 
-  def group_teams_by_away_games
-    grouped_values = {}
-    @teams.all.each do |team|
-      grouped_values[team.id] = @games.find_all_by_away_team_id(team.id)
-    end
-    grouped_values
-  end
-
-  def group_teams_by_home_games
-    grouped_values = {}
-    @teams.all.each do |team|
-      grouped_values[team.id] = @games.find_all_by_home_team_id(team.id)
-    end
-    grouped_values
-  end
+  # def group_teams_by_away_games
+  #   grouped_values = {}
+  #   @teams.all.each do |team|
+  #     grouped_values[team.id] = @games.find_all_by_away_team_id(team.id)
+  #   end
+  #   grouped_values
+  # end
+  #
+  # def group_teams_by_home_games
+  #   grouped_values = {}
+  #   @teams.all.each do |team|
+  #     grouped_values[team.id] = @games.find_all_by_home_team_id(team.id)
+  #   end
+  #   grouped_values
+  # end
 
   def calc_average_goals(games)
     if games.count != 0
@@ -165,7 +154,7 @@ class StatTracker
 
   def highest_scoring_visitor
     teams_away_goals = {}
-    group_teams_by_away_games.each do |team, games|
+    @games.group_games_by(:away_team_id).each do |team, games|
       teams_away_goals[team] = calc_average_goals(games)
     end
      highest_team = teams_away_goals.max_by {|team, average_goals| average_goals}
@@ -174,7 +163,7 @@ class StatTracker
 
   def highest_scoring_home_team
     teams_home_goals = {}
-    group_teams_by_home_games.each do |team, games|
+    @games.group_games_by(:home_team_id).each do |team, games|
       teams_home_goals[team] = calc_average_goals(games)
     end
     highest_team = teams_home_goals.max_by {|team, average_goals| average_goals}
@@ -183,7 +172,7 @@ class StatTracker
 
   def lowest_scoring_visitor
     teams_away_goals = {}
-    group_teams_by_away_games.each do |team, games|
+    @games.group_games_by(:away_team_id).each do |team, games|
       teams_away_goals[team] = calc_average_goals(games)
     end
     highest_team = teams_away_goals.min_by {|team, average_goals| average_goals}
@@ -192,7 +181,7 @@ class StatTracker
 
   def lowest_scoring_home_team
     teams_home_goals = {}
-    group_teams_by_home_games.each do |team, games|
+    @games.group_games_by(:home_team_id).each do |team, games|
       teams_home_goals[team] = calc_average_goals(games)
     end
     highest_team = teams_home_goals.min_by {|team, average_goals| average_goals}
@@ -260,7 +249,6 @@ class StatTracker
   end
 
   def season_summary(season, team_id)
-    # summary = group_games_by_season_type(season, team_id)
     summary = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
     summary = @games.group_games_by(:type, summary)
     generate_season_summary(summary, team_id)
@@ -410,37 +398,27 @@ class StatTracker
   def group_games_of_team_by_season(team_id)
      games_for_team = @games.find_all_by_home_team_id(team_id)
      games_for_team += @games.find_all_by_away_team_id(team_id)
-     test = games_for_team.group_by do |game|
+     games_for_team.group_by do |game|
        game.season
      end
   end
 
   def biggest_team_blowout(id)
-    biggest_win = @games.find_wins_by_team(id).max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(biggest_win)
+    biggest_blowout(@games.find_wins_by_team(id))
   end
 
-  # Refactor these methods && biggest_blowout to use generic
-
   def worst_loss(id)
-    biggest_loss = @games.find_losses_by_team(id).max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(biggest_loss)
+    biggest_blowout(@games.find_losses_by_team(id))
   end
 
   def collection_of_goals_scored_by_team(team_id)
-    teams_games = group_games_by_team[team_id]
-    goals = teams_games.map do |game|
+    @games.find_all_by_team(team_id).map do |game|
       if game.away_team_id == team_id
         game.away_goals
       else
         game.home_goals
       end
     end
-    goals
   end
 
   def most_goals(team_id)

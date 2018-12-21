@@ -26,6 +26,12 @@ class Games
     end
   end
 
+  def get_total_scores(games)
+    games.map do |game|
+      game.away_goals + game.home_goals
+    end
+  end
+
   def find_by_season_id(id)
     group_games_by(:season)[id]
   end
@@ -42,15 +48,15 @@ class Games
     @games.find_all do |game|
       (game.home_team_id == id && game.outcome.include?("home") ||
        game.away_team_id == id && game.outcome.include?("away"))
-     end
+    end
   end
 
   def find_losses_by_team(id)
     @games.find_all do |game|
       (game.away_team_id == id && game.outcome.include?("home") ||
        game.home_team_id == id && game.outcome.include?("away"))
-     end
-   end
+    end
+  end
 
    def find_all_by_team(id)
      find_wins_by_team(id) + find_losses_by_team(id)
