@@ -366,25 +366,17 @@ class StatTracker
   end
 
   def best_season(team_id)
-    games_by_season = group_games_of_team_by_season(team_id)
+    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
     season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
     max = season_win_percentage.max_by {|season, percentage| percentage}
     return max.first
   end
 
   def worst_season(team_id)
-    games_by_season = group_games_of_team_by_season(team_id)
+    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
     season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
     min = season_win_percentage.min_by {|season, percentage| percentage}
     return min.first
-  end
-
-  def group_games_of_team_by_season(team_id)
-     games_for_team = @games.find_all_by_home_team_id(team_id)
-     games_for_team += @games.find_all_by_away_team_id(team_id)
-     games_for_team.group_by do |game|
-       game.season
-     end
   end
 
   def biggest_team_blowout(id)
