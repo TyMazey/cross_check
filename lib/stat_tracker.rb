@@ -176,16 +176,16 @@ class StatTracker
     @teams.all.count
   end
 
-  def goals_scored_by_team
-    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+  def goals_scored_by_team(games = @games.all)
+    games.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.away_goals
       goals_by_team_id[game.home_team_id] += game.home_goals
       goals_by_team_id
     end
   end
 
-  def goals_allowed_by_team
-    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+  def goals_allowed_by_team(games = @games.all)
+    games.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.home_goals
       goals_by_team_id[game.home_team_id] += game.away_goals
       goals_by_team_id
@@ -249,34 +249,14 @@ class StatTracker
     summary = {}
     if selection
       summary[:win_percentage] = calculate_win_percentage(team_id, selection)
-      summary[:goals_scored] = goals_scored_by_team_in_selection(team_id, selection)
-      summary[:goals_against] = goals_allowed_by_team_in_selection(team_id, selection)
+      summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
+      summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
     else
       summary[:win_percentage] = 0.0
       summary[:goals_scored] = 0
       summary[:goals_against] = 0
     end
     return summary
-  end
-
-  def goals_scored_by_team_in_selection(team_id, selection)
-    selection.sum do |game|
-      if game.home_team_id == team_id
-        game.home_goals
-      else
-        game.away_goals
-      end
-    end
-  end
-
-  def goals_allowed_by_team_in_selection(team_id, selection)
-    selection.sum do |game|
-      if game.home_team_id == team_id
-        game.away_goals
-      else
-        game.home_goals
-      end
-    end
   end
 
   def get_win_ratios_by_season(season)
