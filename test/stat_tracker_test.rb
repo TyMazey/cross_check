@@ -50,11 +50,6 @@ class StatTrackerTest < Minitest::Test
     assert_equal 0.0, @stat_tracker.percentage_away_wins
   end
 
-  def test_it_can_group_games_by_venue
-    assert_instance_of Hash, @stat_tracker.group_games_by_venue
-    assert_equal 2, @stat_tracker.group_games_by_venue.values.first.length
-  end
-
   def test_it_can_determine_most_popular_venue
     assert_equal "TD Garden", @stat_tracker.most_popular_venue
   end
@@ -137,11 +132,11 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_the_lowest_scoring_visitor
-    assert_equal "Devils", @stat_tracker.lowest_scoring_visitor
+    assert_equal "Rangers", @stat_tracker.lowest_scoring_visitor
   end
 
   def test_it_can_find_the_lowest_scoring_home_team
-    assert_equal "Devils", @stat_tracker.lowest_scoring_home_team
+    assert_equal "Bruins", @stat_tracker.lowest_scoring_home_team
   end
 
   def test_it_can_find_the_team_with_biggest_dif_btween_home_and_away_wins
@@ -230,7 +225,8 @@ class StatTrackerTest < Minitest::Test
 
     assert_equal exact, @stat_tracker.head_to_head(6, 3)
   end
-  def test_it_can_return_a_season_summary_for_a_team
+
+  def test_it_can_return_a_seasonal_summary_for_a_team
     expected = {20122013 => {preseason: { win_percentage: 100.0,
                                          goals_scored: 8,
                                          goals_against: 4,

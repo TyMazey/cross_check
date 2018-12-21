@@ -1,8 +1,10 @@
 require 'csv'
 require_relative './games'
 require_relative './teams'
+require_relative './csv_reader'
 
 class StatTracker
+  include CSVReader
 
   attr_reader :games,
               :teams
@@ -13,59 +15,24 @@ class StatTracker
   end
 
   def self.from_csv(locations)
-    stat_tracker = StatTracker.new
-    stat_tracker.load_games(locations[:games]) if locations[:games]
-    stat_tracker.load_teams(locations[:teams]) if locations[:teams]
-    stat_tracker.load_game_teams(locations[:game_teams]) if locations[:game_teams]
-    return stat_tracker
-  end
-
-  def generate_hash_from_CSV(file_path)
-    file = File.new(file_path)
-    csv = CSV.new(file, headers: true, header_converters: :symbol)
-    lines = csv.read
-    lines.map do |line|
-      line.to_h
-    end
-  end
-
-  def load_games(file_path)
-    games_info = generate_hash_from_CSV(file_path)
-    games_info.each do |game|
-      @games.create(game)
-    end
-  end
-
-  def load_teams(file_path)
-    teams_info = generate_hash_from_CSV(file_path)
-    teams_info.each do |team|
-      @teams.create(team)
-    end
-  end
-
-  def get_total_scores(games)
-    games.map do |game|
-      game.away_goals + game.home_goals
-    end
+    stat_tracker = self.new
+    stat_tracker.from_csv(locations)
   end
 
   def highest_total_score
-    get_total_scores(@games.all).max
+    @games.get_total_scores(@games.all).max
   end
 
   def lowest_total_score
-    get_total_scores(@games.all).min
+    @games.get_total_scores(@games.all).min
   end
 
   def calc_blowout(game)
     (game.home_goals - game.away_goals).abs
   end
 
-  def biggest_blowout
-    highest_blowout = @games.all.max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(highest_blowout)
+  def biggest_blowout(games = @games.all)
+    calc_blowout(games.max_by {|game| calc_blowout(game)})
   end
 
   def calc_wins(where)
@@ -107,23 +74,17 @@ class StatTracker
   end
 
   def most_popular_venue
-    top_venue = group_games_by_venue.max_by do |venue, games|
+    top_venue = @games.group_games_by(:venue).max_by do |venue, games|
       games.count
     end
     top_venue.first
   end
 
   def least_popular_venue
-    bottom_venue = group_games_by_venue.min_by do |venue, games|
+    bottom_venue = @games.group_games_by(:venue).min_by do |venue, games|
       games.count
     end
     bottom_venue.first
-  end
-
-  def group_games_by_venue
-    @games.all.group_by do |game|
-      game.venue
-    end
   end
 
   def group_games_by_team
@@ -137,58 +98,34 @@ class StatTracker
   end
 
   def season_with_most_games
-    season = group_games_by_season.max_by do |season, games|
+    @games.group_games_by(:season).max_by do |season, games|
       games.count
-    end
-    season.first
+    end.first
   end
 
   def season_with_least_games
-    season = group_games_by_season.min_by do |season, games|
+    @games.group_games_by(:season).min_by do |season, games|
       games.count
-    end
-    season.first
+    end.first
   end
 
-  def average_goals_per_game
-    (get_total_scores(@games.all).sum.to_f / @games.all.count).round(2)
+  def average_goals_per_game(games = @games.all)
+    (@games.get_total_scores(games).sum.to_f / games.count).round(2)
   end
 
   def average_goals_by_season
-    seasons = group_games_by_season
+    seasons = @games.group_games_by(:season)
     seasons.each do |season, games|
-      seasons[season] = (get_total_scores(games).sum.to_f / games.count).round(2)
+      seasons[season] = average_goals_per_game(games)
     end
     seasons
   end
 
   def count_of_games_by_season
-    seasons = group_games_by_season
+    seasons = @games.group_games_by(:season)
     seasons.each do |season, games|
        seasons[season] = games.count
     end
-  end
-
-  def group_games_by_season
-    @games.all.group_by do |game|
-      game.season
-    end
-  end
-
-  def group_teams_by_away_games
-    grouped_values = {}
-    @teams.all.each do |team|
-      grouped_values[team.id] = @games.find_all_by_away_team_id(team.id)
-    end
-    grouped_values
-  end
-
-  def group_teams_by_home_games
-    grouped_values = {}
-    @teams.all.each do |team|
-      grouped_values[team.id] = @games.find_all_by_home_team_id(team.id)
-    end
-    grouped_values
   end
 
   def calc_average_goals(games)
@@ -201,7 +138,7 @@ class StatTracker
 
   def goals_for_visitors
     teams_away_goals = {}
-    group_teams_by_away_games.each do |team, games|
+    @games.group_games_by(:away_team_id).each do |team, games|
       teams_away_goals[team] = calc_average_goals(games)
     end
     teams_away_goals
@@ -209,7 +146,7 @@ class StatTracker
 
   def goals_for_home_teams
     teams_home_goals = {}
-    group_teams_by_home_games.each do |team, games|
+    @games.group_games_by(:home_team_id).each do |team, games|
       teams_home_goals[team] = calc_average_goals(games)
     end
     teams_home_goals
@@ -243,16 +180,16 @@ class StatTracker
     @teams.all.count
   end
 
-  def goals_scored_by_team
-    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+  def goals_scored_by_team(games = @games.all)
+    games.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.away_goals
       goals_by_team_id[game.home_team_id] += game.home_goals
       goals_by_team_id
     end
   end
 
-  def goals_allowed_by_team
-    @games.all.inject(Hash.new(0)) do |goals_by_team_id, game|
+  def goals_allowed_by_team(games = @games.all)
+    games.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.home_goals
       goals_by_team_id[game.home_team_id] += game.away_goals
       goals_by_team_id
@@ -296,20 +233,9 @@ class StatTracker
   end
 
   def season_summary(season, team_id)
-    summary = group_games_by_season_type(season, team_id)
+    summary = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
+    summary = @games.group_games_by(:type, summary)
     generate_season_summary(summary, team_id)
-  end
-
-  def group_games_by_season_type(season, team_id)
-    all_games_in_season = @games.find_by_season_id(season)
-    games_for_team = all_games_in_selection_for_team(team_id, all_games_in_season)
-    games_for_team.group_by {|game| game.type}
-  end
-
-  def all_games_in_selection_for_team(team, selection)
-    selection.find_all do |game|
-      game.home_team_id == team || game.away_team_id == team
-    end
   end
 
   def generate_season_summary(grouped_games, team_id)
@@ -323,34 +249,14 @@ class StatTracker
     summary = {}
     if selection
       summary[:win_percentage] = calculate_win_percentage(team_id, selection)
-      summary[:goals_scored] = goals_scored_by_team_in_selection(team_id, selection)
-      summary[:goals_against] = goals_allowed_by_team_in_selection(team_id, selection)
+      summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
+      summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
     else
       summary[:win_percentage] = 0.0
       summary[:goals_scored] = 0
       summary[:goals_against] = 0
     end
     return summary
-  end
-
-  def goals_scored_by_team_in_selection(team_id, selection)
-    selection.sum do |game|
-      if game.home_team_id == team_id
-        game.home_goals
-      else
-        game.away_goals
-      end
-    end
-  end
-
-  def goals_allowed_by_team_in_selection(team_id, selection)
-    selection.sum do |game|
-      if game.home_team_id == team_id
-        game.away_goals
-      else
-        game.home_goals
-      end
-    end
   end
 
   def get_win_ratios_by_season(season)
@@ -440,53 +346,35 @@ class StatTracker
   end
 
   def best_season(team_id)
-    games_by_season = group_games_of_team_by_season(team_id)
+    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
     season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
     max = season_win_percentage.max_by {|season, percentage| percentage}
     return max.first
   end
 
   def worst_season(team_id)
-    games_by_season = group_games_of_team_by_season(team_id)
+    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
     season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
     min = season_win_percentage.min_by {|season, percentage| percentage}
     return min.first
   end
 
-  def group_games_of_team_by_season(team_id)
-     games_for_team = @games.find_all_by_home_team_id(team_id)
-     games_for_team += @games.find_all_by_away_team_id(team_id)
-     test = games_for_team.group_by do |game|
-       game.season
-     end
-  end
-
   def biggest_team_blowout(id)
-    biggest_win = @games.find_wins_by_team(id).max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(biggest_win)
+    biggest_blowout(@games.find_wins_by_team(id))
   end
-
-  # Refactor these methods && biggest_blowout to use generic
 
   def worst_loss(id)
-    biggest_loss = @games.find_losses_by_team(id).max_by do |game|
-      calc_blowout(game)
-    end
-    calc_blowout(biggest_loss)
+    biggest_blowout(@games.find_losses_by_team(id))
   end
 
   def collection_of_goals_scored_by_team(team_id)
-    teams_games = group_games_by_team[team_id]
-    goals = teams_games.map do |game|
+    @games.find_all_by_team(team_id).map do |game|
       if game.away_team_id == team_id
         game.away_goals
       else
         game.home_goals
       end
     end
-    goals
   end
 
   def most_goals(team_id)
@@ -513,32 +401,21 @@ class StatTracker
     @teams.find_by_id(lowest_percentage.first).team_name
   end
 
-  # def win_loss_records(team)
-  #   win_loss = {}
-  #   @teams.all.each do |team|
-  #     win_loss[team.id] = {wins: @games.find_wins_by_team(team.id).count},
-  #                     {losses: @games.find_losses_by_team(team.id).count}
-  #   end
-  #   binding.pry
-  # end
-
   def win_loss_hash(team)
     games = {}
-    @games.find_all_games_by_team(team).each do |game|
+    @games.find_all_by_team(team).each do |game|
       if game.home_team_id == team
+        games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
         if game.outcome.include?("home")
-          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
           games[game.away_team_id][:wins] += 1
         else
-          games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
           games[game.away_team_id][:losses] += 1
         end
       else
+        games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
         if game.outcome.include?("away")
-          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
           games[game.home_team_id][:wins] += 1
         else
-          games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
           games[game.home_team_id][:losses] += 1
         end
       end
@@ -565,7 +442,8 @@ class StatTracker
 
   def populate_missing_info(team_id, summary)
     summary.each do |season, generated_summary|
-      grouped_games = group_games_by_season_type(season, team_id)
+      grouped_games = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
+      grouped_games = @games.group_games_by(:type, grouped_games)
       grouped_games.default=([]) # Override default to allow count
       generated_summary.each do |type, stats|
         game_count = grouped_games[type.to_s.capitalize[0]].count
