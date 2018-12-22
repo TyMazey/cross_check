@@ -44,7 +44,7 @@ module TeamStatistics
   end
 
   def favorite_opponent(team_id)
-    team_history = win_loss_hash(team_id)
+    team_history = win_loss_record(team_id)
     highest_percentage = team_history.max_by do |opponent, history|
       history[:wins].to_f / history[:losses] * 100.0
     end
@@ -52,7 +52,7 @@ module TeamStatistics
   end
 
   def rival(team_id)
-    team_history = win_loss_hash(team_id)
+    team_history = win_loss_record(team_id)
     lowest_percentage = team_history.min_by do |opponent, history|
       history[:wins].to_f / history[:losses] * 100.0
     end
@@ -68,7 +68,29 @@ module TeamStatistics
   end
 
   def head_to_head(team, team_against)
-    win_loss_hash(team)[team_against]
+    win_loss_record(team)[team_against]
+  end
+
+  def win_loss_record(team)
+    games = {}
+    @games.find_all_by_team(team).each do |game|
+      if game.home_team_id == team
+        games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
+        if game.outcome.include?("home")
+          games[game.away_team_id][:wins] += 1
+        else
+          games[game.away_team_id][:losses] += 1
+        end
+      else
+        games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
+        if game.outcome.include?("away")
+          games[game.home_team_id][:wins] += 1
+        else
+          games[game.home_team_id][:losses] += 1
+        end
+      end
+    end
+    return games
   end
 
 end
