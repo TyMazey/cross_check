@@ -5,7 +5,7 @@ class StatTrackerTest < Minitest::Test
   def setup
     @locations = { games: "./data/game_test.csv",
                    teams: "./data/team_info_test.csv",
-                   game_tests: "./data/game_teams_stats_test.csv"
+                   game_teams: nil
                  }
     @stat_tracker = StatTracker.from_csv(@locations)
   end

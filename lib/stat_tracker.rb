@@ -2,9 +2,11 @@ require 'csv'
 require_relative './games'
 require_relative './teams'
 require_relative './csv_reader'
+require_relative './summaries'
 
 class StatTracker
-  include CSVReader
+  include CSVReader,
+          Summaries
 
   attr_reader :games,
               :teams
@@ -232,33 +234,6 @@ class StatTracker
     @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
 
-  def season_summary(season, team_id)
-    summary = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
-    summary = @games.group_games_by(:type, summary)
-    generate_season_summary(summary, team_id)
-  end
-
-  def generate_season_summary(grouped_games, team_id)
-    final_summary = Hash.new({})
-    final_summary[:preseason] = generate_summary(grouped_games["P"], team_id)
-    final_summary[:regular_season] = generate_summary(grouped_games["R"], team_id)
-    final_summary
-  end
-
-  def generate_summary(selection, team_id)
-    summary = {}
-    if selection
-      summary[:win_percentage] = calculate_win_percentage(team_id, selection)
-      summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
-      summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
-    else
-      summary[:win_percentage] = 0.0
-      summary[:goals_scored] = 0
-      summary[:goals_against] = 0
-    end
-    return summary
-  end
-
   def get_win_ratios_by_season(season)
     games_in_season = @games.find_by_season_id(season)
     games_by_team = group_selected_games_by_team(games_in_season)
@@ -425,38 +400,6 @@ class StatTracker
 
   def head_to_head(team, team_against)
     win_loss_hash(team)[team_against]
-  end
-
-  def seasonal_summary(team_id)
-    generate_multi_season_summary(team_id)
-  end
-
-  def generate_multi_season_summary(team_id)
-    summary = {}
-    all_seasons = @games.all_seasons_for_team(team_id)
-    all_seasons.each do |season|
-      summary[season] = season_summary(season, team_id)
-    end
-    populate_missing_info(team_id, summary)
-  end
-
-  def populate_missing_info(team_id, summary)
-    summary.each do |season, generated_summary|
-      grouped_games = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
-      grouped_games = @games.group_games_by(:type, grouped_games)
-      grouped_games.default=([]) # Override default to allow count
-      generated_summary.each do |type, stats|
-        game_count = grouped_games[type.to_s.capitalize[0]].count
-        if game_count == 0
-          stats[:average_goals_scored] = 0.0
-          stats[:average_goals_against] = 0.0
-        else
-          stats[:average_goals_scored] = stats[:goals_scored].to_f / game_count
-          stats[:average_goals_against] = stats[:goals_against].to_f / game_count
-        end
-      end
-    end
-    return summary
   end
 
 end
