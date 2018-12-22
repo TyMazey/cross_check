@@ -32,6 +32,16 @@ class Games
     end
   end
 
+  def collection_of_goals_scored_by_team(team_id)
+    find_all_by_team(team_id).map do |game|
+      if game.away_team_id == team_id
+        game.away_goals
+      else
+        game.home_goals
+      end
+    end
+  end
+
   def find_by_season_id(id)
     group_games_by(:season)[id]
   end

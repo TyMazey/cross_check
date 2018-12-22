@@ -1,4 +1,4 @@
-require_relative './average_goals'
+require_relative './averages'
 
 module GameStatistics
   include Averages
