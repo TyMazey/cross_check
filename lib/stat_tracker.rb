@@ -2,9 +2,11 @@ require 'csv'
 require_relative './games'
 require_relative './teams'
 require_relative './csv_reader'
+require_relative './game_statistics'
 
 class StatTracker
-  include CSVReader
+  include CSVReader,
+          GameStatistics
 
   attr_reader :games,
               :teams
@@ -19,74 +21,6 @@ class StatTracker
     stat_tracker.from_csv(locations)
   end
 
-  def highest_total_score
-    @games.get_total_scores(@games.all).max
-  end
-
-  def lowest_total_score
-    @games.get_total_scores(@games.all).min
-  end
-
-  def calc_blowout(game)
-    (game.home_goals - game.away_goals).abs
-  end
-
-  def biggest_blowout(games = @games.all)
-    calc_blowout(games.max_by {|game| calc_blowout(game)})
-  end
-
-  def calc_wins(where)
-    wins = @games.all.find_all do |game|
-      game.outcome.include?(where)
-    end
-    ((wins.count.to_f / @games.all.count) * 100.0).round(2)
-  end
-
-  def calc_home_win_percentages(id, games)
-    home_wins = games.count do |game|
-      game.outcome.include?("home") && game.home_team_id == id
-    end
-      return (home_wins.to_f / games.count * 100) unless games.count == 0
-      return 0.0
-  end
-
-  def calc_away_win_percentages(id, games)
-    away_wins = games.count do |game|
-      game.outcome.include?("away") && game.home_team_id == id
-    end
-      return (away_wins.to_f / games.count * 100) unless games.count == 0
-      return 0.0
-  end
-
-  def calculate_win_percentage(id, games)
-    wins = calc_home_win_percentages(id, games) + calc_away_win_percentages(id, games) / 2
-    return wins
-  end
-
-  def percentage_home_wins
-    home = "home win"
-    calc_wins(home)
-  end
-
-  def percentage_away_wins
-    away = "away win"
-    calc_wins(away)
-  end
-
-  def most_popular_venue
-    top_venue = @games.group_games_by(:venue).max_by do |venue, games|
-      games.count
-    end
-    top_venue.first
-  end
-
-  def least_popular_venue
-    bottom_venue = @games.group_games_by(:venue).min_by do |venue, games|
-      games.count
-    end
-    bottom_venue.first
-  end
-
   def group_games_by_team
     games_by_team = {}
     @teams.all.each do |team|
@@ -97,49 +31,10 @@ class StatTracker
     games_by_team
   end
 
-  def season_with_most_games
-    @games.group_games_by(:season).max_by do |season, games|
-      games.count
-    end.first
-  end
-
-  def season_with_least_games
-    @games.group_games_by(:season).min_by do |season, games|
-      games.count
-    end.first
-  end
-
-  def average_goals_per_game(games = @games.all)
-    (@games.get_total_scores(games).sum.to_f / games.count).round(2)
-  end
-
-  def average_goals_by_season
-    seasons = @games.group_games_by(:season)
-    seasons.each do |season, games|
-      seasons[season] = average_goals_per_game(games)
-    end
-    seasons
-  end
-
-  def count_of_games_by_season
-    seasons = @games.group_games_by(:season)
-    seasons.each do |season, games|
-       seasons[season] = games.count
-    end
-  end
-
-  def calc_average_goals(games)
-    if games.count != 0
-    games.sum {|game| game.away_goals} / games.count
-    else
-      0
-    end
-  end
-
   def goals_for_visitors
     teams_away_goals = {}
     @games.group_games_by(:away_team_id).each do |team, games|
-      teams_away_goals[team] = calc_average_goals(games)
+      teams_away_goals[team] = calc_average_goals(games, false)
     end
     teams_away_goals
   end
@@ -147,7 +42,7 @@ class StatTracker
   def goals_for_home_teams
     teams_home_goals = {}
     @games.group_games_by(:home_team_id).each do |team, games|
-      teams_home_goals[team] = calc_average_goals(games)
+      teams_home_goals[team] = calc_average_goals(games, true)
     end
     teams_home_goals
   end
@@ -247,15 +142,9 @@ class StatTracker
 
   def generate_summary(selection, team_id)
     summary = {}
-    if selection
       summary[:win_percentage] = calculate_win_percentage(team_id, selection)
       summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
       summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
-    else
-      summary[:win_percentage] = 0.0
-      summary[:goals_scored] = 0
-      summary[:goals_against] = 0
-    end
     return summary
   end
 

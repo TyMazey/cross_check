@@ -47,7 +47,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_precentage_of_games_away_teams_have_won
-    assert_equal 0.0, @stat_tracker.percentage_away_wins
+    assert_equal 0.0, @stat_tracker.percentage_visitor_wins
   end
 
   def test_it_can_determine_most_popular_venue
