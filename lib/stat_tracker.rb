@@ -3,10 +3,12 @@ require_relative './games'
 require_relative './teams'
 require_relative './csv_reader'
 require_relative './summaries'
+require_relative './team_statistics'
 
 class StatTracker
   include CSVReader,
-          Summaries
+          Summaries,
+          TeamStatistics
 
   attr_reader :games,
               :teams
@@ -309,39 +311,6 @@ class StatTracker
     worst_fans.map {|team| team.first.team_name}
   end
 
-  def team_info(id)
-    @teams.find_by_id(id).information
-  end
-
-  def map_season_hash_to_win_percentage(team_id, games_by_season)
-    games_by_season.each do |season, games|
-      games_by_season[season] = calculate_win_percentage(team_id, games)
-    end
-    games_by_season
-  end
-
-  def best_season(team_id)
-    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
-    season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
-    max = season_win_percentage.max_by {|season, percentage| percentage}
-    return max.first
-  end
-
-  def worst_season(team_id)
-    games_by_season = @games.group_games_by(:season, @games.find_all_by_team(team_id))
-    season_win_percentage = map_season_hash_to_win_percentage(team_id, games_by_season)
-    min = season_win_percentage.min_by {|season, percentage| percentage}
-    return min.first
-  end
-
-  def biggest_team_blowout(id)
-    biggest_blowout(@games.find_wins_by_team(id))
-  end
-
-  def worst_loss(id)
-    biggest_blowout(@games.find_losses_by_team(id))
-  end
-
   def collection_of_goals_scored_by_team(team_id)
     @games.find_all_by_team(team_id).map do |game|
       if game.away_team_id == team_id
@@ -350,30 +319,6 @@ class StatTracker
         game.home_goals
       end
     end
-  end
-
-  def most_goals(team_id)
-    collection_of_goals_scored_by_team(team_id).max
-  end
-
-  def fewest_goals(team_id)
-    collection_of_goals_scored_by_team(team_id).min
-  end
-
-  def favorite_team(team_id)
-    team_history = win_loss_hash(team_id)
-    highest_percentage = team_history.max_by do |opponent, history|
-      history[:wins].to_f / history[:losses] * 100.0
-    end
-    @teams.find_by_id(highest_percentage.first).team_name
-  end
-
-  def rival(team_id)
-    team_history = win_loss_hash(team_id)
-    lowest_percentage = team_history.min_by do |opponent, history|
-      history[:wins].to_f / history[:losses] * 100.0
-    end
-    @teams.find_by_id(lowest_percentage.first).team_name
   end
 
   def win_loss_hash(team)
@@ -397,9 +342,4 @@ class StatTracker
     end
     return games
   end
-
-  def head_to_head(team, team_against)
-    win_loss_hash(team)[team_against]
-  end
-
 end
