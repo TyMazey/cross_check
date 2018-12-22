@@ -36,14 +36,6 @@ class Games
     group_games_by(:season)[id]
   end
 
-  def find_all_by_away_team_id(id)
-    group_games_by(:away_team_id)[id]
-  end
-
-  def find_all_by_home_team_id(id)
-    group_games_by(:home_team_id)[id]
-  end
-
   def find_wins_by_team(id)
     @games.find_all do |game|
       (game.home_team_id == id && game.outcome.include?("home") ||
