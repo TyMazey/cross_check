@@ -194,6 +194,11 @@ class StatTrackerTest < Minitest::Test
     assert_equal 20122013, @stat_tracker.worst_season(3)
   end
 
+  def test_it_can_determine_average_win_percentage
+    assert_equal 100.00, @stat_tracker.average_win_percentage(6)
+    assert_equal 0.00, @stat_tracker.average_win_percentage(3)
+  end
+
   def test_it_can_determine_biggest_blowout_for_a_team
     assert_equal 3, @stat_tracker.biggest_team_blowout(6)
   end
@@ -203,15 +208,15 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_most_goals_scored_for_a_team
-    assert_equal 5, @stat_tracker.most_goals(6)
+    assert_equal 5, @stat_tracker.most_goals_scored(6)
   end
 
   def test_fewest_goals_scored_for_a_team
-    assert_equal 3, @stat_tracker.fewest_goals(6)
+    assert_equal 3, @stat_tracker.fewest_goals_scored(6)
   end
 
   def test_it_can_name_the_opponent_that_loses_most_against_a_team
-    assert_equal "Rangers", @stat_tracker.favorite_team(6)
+    assert_equal "Rangers", @stat_tracker.favorite_opponent(6)
   end
 
   def test_it_can_name_the_opponent_that_wins_most_against_a_team
