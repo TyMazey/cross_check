@@ -1,8 +1,8 @@
 module AverageGoals
 
-  def calc_wins(where)
+  def calc_wins(home_away)
     wins = @games.all.find_all do |game|
-      game.outcome.include?(where)
+      game.outcome.include?(home_away)
     end
     ((wins.count.to_f / @games.all.count) * 100.0).round(2)
   end
@@ -27,12 +27,17 @@ module AverageGoals
     wins = calc_home_win_percentages(id, games) + calc_away_win_percentages(id, games) / 2
     return wins
   end
+
+  def calc_blowout(game)
+    (game.home_goals - game.away_goals).abs
+  end
+
   def calc_average_goals(games, home)
     if games.count != 0
-      if home == false
-        (games.sum {|game| game.away_goals}.to_f / games.count).round(2)
-      elsif home == true
+      if home
         (games.sum {|game| game.home_goals}.to_f / games.count).round(2)
+      else
+        (games.sum {|game| game.away_goals}.to_f / games.count).round(2)
       end
     else
       0

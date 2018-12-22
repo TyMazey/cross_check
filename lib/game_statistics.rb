@@ -11,10 +11,6 @@ module GameStatistics
     @games.get_total_scores(@games.all).min
   end
 
-  def calc_blowout(game)
-    (game.home_goals - game.away_goals).abs
-  end
-
   def biggest_blowout(games = @games.all)
     calc_blowout(games.max_by {|game| calc_blowout(game)})
   end
