@@ -77,22 +77,6 @@ class StatTracker
     batch_map_hash_to_win_percentage(grouped_games_by_type)
   end
 
-  def biggest_bust(season)
-    win_ratios = get_win_ratios_by_season(season)
-    loser = win_ratios.max_by do |team_id, season_type|
-      (win_ratios[team_id]["P"] - win_ratios[team_id]["R"])
-    end
-    @teams.find_by_id(loser.first).team_name
-  end
-
-  def biggest_surprise(season)
-    win_ratios = get_win_ratios_by_season(season)
-    winner = win_ratios.min_by do |team_id, season_type|
-      win_ratios[team_id]["P"] - win_ratios[team_id]["R"]
-    end
-    @teams.find_by_id(winner.first).team_name
-  end
-
   def group_selected_games_by_team(season)
     games_by_team = {}
     season.each do |game|

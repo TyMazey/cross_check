@@ -23,4 +23,9 @@ class Game
     @venue = attributes[:venue]
   end
 
+
+  def calc_blowout
+    (@home_goals - @away_goals).abs
+  end
+
 end
