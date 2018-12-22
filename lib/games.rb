@@ -68,6 +68,17 @@ class Games
      group_games_by(:season, find_all_by_team(id)).keys
    end
 
+   def group_games_by_team(games = @games)
+     games_by_team = {}
+     games.each do |game|
+       games_by_team[game.home_team_id] = [] if games_by_team[game.home_team_id] == nil
+       games_by_team[game.home_team_id] << game
+       games_by_team[game.away_team_id] = [] if games_by_team[game.away_team_id] == nil
+       games_by_team[game.away_team_id] << game
+     end
+     games_by_team
+   end
+
    def group_games_by(category, selection = @games)
      if @valid_selections.include?(category)
        grouped_category = selection.group_by do |game|

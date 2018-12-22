@@ -1,4 +1,7 @@
+require_relative './goal_averages'
+
 module LeagueStatistics
+  include GoalAverages
 
   def count_of_teams
     @teams.all.count
@@ -57,7 +60,7 @@ module LeagueStatistics
   end
 
   def winningest_team
-    team_games = group_games_by_team
+    team_games = @games.group_games_by_team
     team_games.each do |team_id, games|
       team_games[team_id] = calculate_win_percentage(team_id, games)
     end

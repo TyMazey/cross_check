@@ -1,4 +1,4 @@
-module Averages
+module GameAverages
 
   def calc_wins(home_away)
     wins = @games.all.find_all do |game|
@@ -28,17 +28,23 @@ module Averages
     return wins
   end
 
-  def calc_average_goals(games, home)
-    if games.count != 0
-      if home
-        (games.sum {|game| game.home_goals}.to_f / games.count).round(2)
-      else
-        (games.sum {|game| game.away_goals}.to_f / games.count).round(2)
-      end
-    else
-      0
+  def get_win_ratios_by_season(season)
+    games_in_season = @games.find_by_season_id(season)
+    games_by_team = @games.group_games_by_team(games_in_season)
+    games_by_team.each do |team_id, games|
+      games_by_team[team_id] = @games.group_games_by(:type, games)
     end
+    batch_map_hash_to_win_percentage(games_by_team)
   end
 
-
+  def batch_map_hash_to_win_percentage(grouped_games)
+    final = {}
+    grouped_games.each do |team_id, by_season|
+      final[team_id] = Hash.new(0.0)
+      by_season.each do |type, games|
+        final[team_id][type] = calculate_win_percentage(team_id, games)
+      end
+    end
+    final
+  end
 end
