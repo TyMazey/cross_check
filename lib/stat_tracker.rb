@@ -4,11 +4,13 @@ require_relative './teams'
 require_relative './csv_reader'
 require_relative './summaries'
 require_relative './team_statistics'
+require_relative './league_statistics'
 
 class StatTracker
   include CSVReader,
           Summaries,
-          TeamStatistics
+          TeamStatistics,
+          LeagueStatistics
 
   attr_reader :games,
               :teams
@@ -156,34 +158,6 @@ class StatTracker
     teams_home_goals
   end
 
-  def highest_scoring_visitor
-    teams_away_goals = goals_for_visitors
-     highest_team = teams_away_goals.max_by {|team, average_goals| average_goals}
-     @teams.find_by_id(highest_team.first).team_name
-  end
-
-  def highest_scoring_home_team
-    teams_home_goals = goals_for_home_teams
-    highest_team = teams_home_goals.max_by {|team, average_goals| average_goals}
-    @teams.find_by_id(highest_team.first).team_name
-  end
-
-  def lowest_scoring_visitor
-    teams_away_goals = goals_for_visitors
-    highest_team = teams_away_goals.min_by {|team, average_goals| average_goals}
-    @teams.find_by_id(highest_team.first).team_name
-  end
-
-  def lowest_scoring_home_team
-    teams_home_goals = goals_for_home_teams
-    highest_team = teams_home_goals.min_by {|team, average_goals| average_goals}
-    @teams.find_by_id(highest_team.first).team_name
-  end
-
-  def count_of_teams
-    @teams.all.count
-  end
-
   def goals_scored_by_team(games = @games.all)
     games.inject(Hash.new(0)) do |goals_by_team_id, game|
       goals_by_team_id[game.away_team_id] += game.away_goals
@@ -198,42 +172,6 @@ class StatTracker
       goals_by_team_id[game.home_team_id] += game.away_goals
       goals_by_team_id
     end
-  end
-
-  def best_offense
-    highest_scoring = goals_scored_by_team.max_by do |team_id, total_goals|
-      total_goals
-    end
-    @teams.find_by_id(highest_scoring.first).team_name
-  end
-
-  def worst_offense
-    lowest_scoring = goals_scored_by_team.min_by do |team_id, total_goals|
-      total_goals
-    end
-    @teams.find_by_id(lowest_scoring.first).team_name
-  end
-
-  def best_defense
-    least_allowed = goals_allowed_by_team.min_by do |team_id, total_goals|
-      total_goals
-    end
-    @teams.find_by_id(least_allowed.first).team_name
-  end
-
-  def worst_defense
-    most_allowed = goals_allowed_by_team.max_by do |team_id, total_goals|
-      total_goals
-    end
-    @teams.find_by_id(most_allowed.first).team_name
-  end
-
-  def winningest_team
-    team_games = group_games_by_team
-    team_games.each do |team_id, games|
-      team_games[team_id] = calculate_win_percentage(team_id, games)
-    end
-    @teams.find_by_id((team_games.max_by {|team, goals| goals}).first).team_name
   end
 
   def get_win_ratios_by_season(season)
@@ -273,7 +211,7 @@ class StatTracker
   def group_team_games_by_type(by_team)
     final = {}
     by_team.each do |team_id, games|
-      final[team_id] = games.group_by {|game| game.type}
+      final[team_id] = @games.group_games_by(:type, games)
     end
     final
   end
@@ -287,28 +225,6 @@ class StatTracker
       end
     end
     final
-  end
-
-  def best_fans
-    teams_wins = {}
-    @teams.all.each do |team|
-      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
-    end
-    best_fans = teams_wins.max_by do |team, percentages|
-      percentages
-    end
-    best_fans.first.team_name
-  end
-
-  def worst_fans
-    teams_wins = {}
-    @teams.all.each do |team|
-      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
-    end
-    worst_fans = teams_wins.find_all do |team, percentages|
-      percentages < 50
-    end
-    worst_fans.map {|team| team.first.team_name}
   end
 
   def collection_of_goals_scored_by_team(team_id)
