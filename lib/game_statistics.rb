@@ -1,7 +1,7 @@
-require_relative './averages'
+require_relative './game_averages'
 
 module GameStatistics
-  include Averages
+  include GameAverages
 
   def highest_total_score
     @games.get_total_scores(@games.all).max

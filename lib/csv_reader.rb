@@ -1,3 +1,5 @@
+require 'csv'
+
 module CSVReader
 
   def from_csv(locations)
