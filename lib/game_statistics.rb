@@ -1,7 +1,7 @@
-require_relative './average_goals'
+require_relative './averages'
 
 module GameStatistics
-  include AverageGoals
+  include Averages
 
   def highest_total_score
     @games.get_total_scores(@games.all).max
@@ -12,7 +12,7 @@ module GameStatistics
   end
 
   def biggest_blowout(games = @games.all)
-    calc_blowout(games.max_by {|game| calc_blowout(game)})
+    (games.max_by {|game| game.calc_blowout}).calc_blowout
   end
 
   def most_popular_venue
