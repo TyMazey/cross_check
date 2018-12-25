@@ -5,7 +5,7 @@ module CSVReader
   def from_csv(locations)
     load_games(locations[:games]) if locations[:games]
     load_teams(locations[:teams]) if locations[:teams]
-    load_game_teams(locations[:game_teams]) if locations[:game_teams]
+    # load_game_teams(locations[:game_teams]) if locations[:game_teams]
     return self
   end
 
