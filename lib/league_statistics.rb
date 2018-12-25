@@ -1,7 +1,9 @@
 require_relative './goal_averages'
+require_relative './game_averages'
 
 module LeagueStatistics
-  include GoalAverages
+  include GoalAverages,
+          GameAverages
 
   def count_of_teams
     @teams.all.count

@@ -1,4 +1,6 @@
 module Summaries
+  include GameAverages,
+          GoalAverages
 
   def season_summary(season, team_id)
     summary = @games.group_games_by(:season, @games.find_all_by_team(team_id))[season]
