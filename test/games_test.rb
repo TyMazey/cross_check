@@ -21,7 +21,7 @@ class GamesTest < Minitest::Test
                   home_team_id: "6",
                   away_goals: 4,
                   home_goals: 5,
-                  outcome: "home win OT"
+                  outcome: "home win REG"
   }
     @games = Games.new
   end
@@ -58,7 +58,7 @@ class GamesTest < Minitest::Test
     assert_equal 2, @games.all.count
     assert_equal 2012030221, @games.all.first.game_id
     assert_equal 2012030222, @games.all.last.game_id
-    assert_equal "home win OT", @games.all.last.outcome
+    assert_equal "home win REG", @games.all.last.outcome
     @games.all.each {|game| assert_instance_of Game, game}
   end
 
@@ -113,5 +113,18 @@ class GamesTest < Minitest::Test
 
     assert_equal expected, @games.group_games_by_team
     assert_equal ({}), @games.group_games_by_team([])
+  end
+
+  def test_it_can_group_games_by_given_category
+    @games.create(@attributes)
+    @games.create(@attributes_2)
+
+    expected_season = {20122013 => @games.all}
+    expected_outcome = {"home win OT" => [@games.all.first],
+                        "home win REG" => [@games.all.last]}
+
+    assert_equal expected_season, @games.group_games_by(:season)
+    assert_equal expected_outcome, @games.group_games_by(:outcome)
+    assert_equal ({}), @games.group_games_by(:game_id)
   end
 end
