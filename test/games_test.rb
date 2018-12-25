@@ -86,4 +86,13 @@ class GamesTest < Minitest::Test
     assert_equal 2, @games.find_losses_by_team(3).count
     assert_equal [], @games.find_losses_by_team(6)
   end
+
+  def test_it_can_find_all_games_for_a_team
+    @games.create(@attributes)
+    @games.create(@attributes_2)
+
+    assert_equal 2, @games.find_all_by_team(6).count
+    assert_equal 2012030221, @games.find_all_by_team(6).first.game_id
+    assert_equal [], @games.find_all_by_team(4)
+  end
 end

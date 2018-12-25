@@ -45,7 +45,7 @@ class Games
   end
 
    def find_all_by_team(id)
-     find_wins_by_team(id) + find_losses_by_team(id)
+     group_games_by_team[id]
    end
 
    def all_seasons_for_team(id)
@@ -53,11 +53,15 @@ class Games
    end
 
    def group_games_by_team(games = @games)
-     games_by_team = {}
+     games_by_team = Hash.new([])
      games.each do |game|
-       games_by_team[game.home_team_id] = [] if games_by_team[game.home_team_id] == nil
+       if games_by_team[game.home_team_id] == []
+         games_by_team[game.home_team_id] = []
+       end
+       if games_by_team[game.away_team_id] == []
+         games_by_team[game.away_team_id] = []
+       end
        games_by_team[game.home_team_id] << game
-       games_by_team[game.away_team_id] = [] if games_by_team[game.away_team_id] == nil
        games_by_team[game.away_team_id] << game
      end
      games_by_team
