@@ -95,4 +95,12 @@ class GamesTest < Minitest::Test
     assert_equal 2012030221, @games.find_all_by_team(6).first.game_id
     assert_equal [], @games.find_all_by_team(4)
   end
+
+  def test_it_can_determine_all_seasons_for_team
+    @games.create(@attributes)
+    @games.create(@attributes_2)
+
+    assert_equal [20122013], @games.all_seasons_for_team(6)
+    assert_equal [], @games.all_seasons_for_team(4)
+  end
 end
