@@ -103,4 +103,15 @@ class GamesTest < Minitest::Test
     assert_equal [20122013], @games.all_seasons_for_team(6)
     assert_equal [], @games.all_seasons_for_team(4)
   end
+
+  def test_it_can_group_games_by_team_id
+    @games.create(@attributes)
+    @games.create(@attributes_2)
+
+    expected = {6 => @games.all,
+                3 => @games.all}
+
+    assert_equal expected, @games.group_games_by_team
+    assert_equal ({}), @games.group_games_by_team([])
+  end
 end
