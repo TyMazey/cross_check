@@ -36,11 +36,11 @@ module TeamStatistics
   end
 
   def most_goals_scored(team_id)
-    @games.collection_of_goals_scored_by_team(team_id).max
+    collection_of_goals_scored_by_team(team_id).max
   end
 
   def fewest_goals_scored(team_id)
-    @games.collection_of_goals_scored_by_team(team_id).min
+    collection_of_goals_scored_by_team(team_id).min
   end
 
   def favorite_opponent(team_id)

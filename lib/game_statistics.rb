@@ -6,11 +6,11 @@ module GameStatistics
           GoalAverages
 
   def highest_total_score
-    @games.get_total_scores(@games.all).max
+    get_total_scores(@games.all).max
   end
 
   def lowest_total_score
-    @games.get_total_scores(@games.all).min
+    get_total_scores(@games.all).min
   end
 
   def biggest_blowout(games = @games.all)
@@ -59,7 +59,7 @@ module GameStatistics
   end
 
   def average_goals_per_game(games = @games.all)
-    (@games.get_total_scores(games).sum.to_f / games.count).round(2)
+    (get_total_scores(games).sum.to_f / games.count).round(2)
   end
 
   def average_goals_by_season

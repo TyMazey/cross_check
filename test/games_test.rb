@@ -29,7 +29,9 @@ class GamesTest < Minitest::Test
   def test_it_can_create_a_new_game
     game = @games.create(@attributes)
 
-    assert_equal game, @games.all
+    assert_equal 2012030221, @games.all.first.game_id
+    assert_equal 2, @games.all.first.away_goals
+    assert_equal 6, @games.all.first.home_team_id
   end
 
   def test_it_can_search_for_games_by_id
@@ -48,11 +50,14 @@ class GamesTest < Minitest::Test
                     away_goals: 2,
                     home_goals: 3,
                     outcome: "home win OT"
-  }
-  @games.create(@attributes)
-  @games.create(attributes_2)
+    }
+    @games.create(@attributes)
+    @games.create(attributes_2)
 
 
-    assert_equal [@games.all.first], @games.find_by_season_id(20122013)
+    assert_equal 2, @games.all.count
+    assert_equal 2012030221, @games.all.first.game_id
+    assert_equal 2012030222, @games.all.last.game_id
+    assert_equal "home win OT", @games.all.last.outcome
   end
 end
