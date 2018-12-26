@@ -1,30 +1,34 @@
 module GameAverages
 
-  def calc_wins(home_away)
-    wins = @games.all.find_all do |game|
-      game.outcome.include?(home_away)
-    end
-    ((wins.count.to_f / @games.all.count) * 100.0).round(2)
-  end
-
   def calc_home_win_percentages(id, games)
-    home_wins = games.count do |game|
-      game.outcome.include?("home") && game.home_team_id == id
+    home_wins = 0
+    home_games = 0
+    games.each do |game|
+      if game.home_team_id == id
+        home_wins += 1 if game.outcome.include?("home")
+        home_games += 1
+      end
     end
-      return (home_wins.to_f / games.count * 100) unless games.count == 0
-      return 0.0
+    return (home_wins.to_f / home_games * 100) unless home_games == 0
+    return 0.0
   end
 
   def calc_away_win_percentages(id, games)
-    away_wins = games.count do |game|
-      game.outcome.include?("away") && game.away_team_id == id
+    away_wins = 0
+    away_games = 0
+    games.each do |game|
+      if game.away_team_id == id
+        away_wins += 1 if game.outcome.include?("away")
+        away_games += 1
+      end
     end
-      return (away_wins.to_f / games.count * 100) unless games.count == 0
-      return 0.0
+    return (away_wins.to_f / away_games * 100) unless away_games == 0
+    return 0.0
   end
 
   def calculate_win_percentage(id, games)
-    wins = calc_home_win_percentages(id, games) + calc_away_win_percentages(id, games) / 2
+    wins = (calc_home_win_percentages(id, games) +
+            calc_away_win_percentages(id, games) / 2)
     return wins
   end
 
