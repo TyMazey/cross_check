@@ -9,7 +9,7 @@ module GameAverages
         home_games += 1
       end
     end
-    return (home_wins.to_f / home_games * 100) unless home_games == 0
+    return (home_wins.to_f / home_games * 100).round(2) unless home_games == 0
     return 0.0
   end
 
@@ -22,14 +22,17 @@ module GameAverages
         away_games += 1
       end
     end
-    return (away_wins.to_f / away_games * 100) unless away_games == 0
+    return (away_wins.to_f / away_games * 100).round(2) unless away_games == 0
     return 0.0
   end
 
   def calculate_win_percentage(id, games)
-    wins = (calc_home_win_percentages(id, games) +
-            calc_away_win_percentages(id, games) / 2)
-    return wins
+    wins = games.count do |game|
+      (game.outcome.include?("home") && game.home_team_id == id) ||
+      (game.outcome.include?("away") && game.away_team_id == id)
+    end.to_f
+    return (wins / games.count * 100).round(2) unless games.count == 0
+    return 0.0
   end
 
   def get_win_ratios_by_season(season)
