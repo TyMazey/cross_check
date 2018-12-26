@@ -32,11 +32,13 @@ module GameStatistics
   end
 
   def percentage_home_wins
-    calc_wins("home")
+    win_count = @games.all.count {|game| game.outcome.include?("home")}.to_f
+    win_count / @games.all.count * 100
   end
 
   def percentage_visitor_wins
-    calc_wins("away")
+    win_count = @games.all.count {|game| game.outcome.include?("away")}.to_f
+    win_count / @games.all.count * 100
   end
 
   def season_with_most_games
