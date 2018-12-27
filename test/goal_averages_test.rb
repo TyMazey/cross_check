@@ -57,7 +57,16 @@ class GoalAveragesTest < Minitest::Test
   end
 
   def test_total_scores
-
     assert_equal [7, 8, 3, 10], @stat_tracker.get_total_scores(@games)
+  end
+
+  def test_collection_of_goals_scored_by_team
+    @games.each do |game|
+      @stat_tracker.games.all.push(game)
+    end
+
+    assert_equal [4, 5, 2, 6], @stat_tracker.collection_of_goals_scored_by_team(1)
+    assert_equal [3, 3], @stat_tracker.collection_of_goals_scored_by_team(2)
+    assert_equal [1, 4], @stat_tracker.collection_of_goals_scored_by_team(3)
   end
 end
