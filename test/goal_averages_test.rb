@@ -30,12 +30,34 @@ class GoalAveragesTest < Minitest::Test
                 2 => 9,
                 3 => 8
     }
-    
+
     assert_equal expected, @stat_tracker.goals_allowed_by_team(@games)
   end
 
   def test_it_can_calculate_average_goals_for_home_and_away_games
     assert_equal 3.25, @stat_tracker.calc_average_goals(@games, true)
     assert_equal 3.75, @stat_tracker.calc_average_goals(@games, false)
+  end
+
+  def test_goals_for_visitors_and_home_teams
+    @games.each do |game|
+      @stat_tracker.games.all.push(game)
+    end
+    expected = {1 => 5.5,
+                2 => 3,
+                3 => 1
+    }
+    expected_2 = {1 => 3,
+                  2 => 3,
+                  3 => 4
+    }
+
+    assert_equal expected, @stat_tracker.goals_for_visitors
+    assert_equal expected_2, @stat_tracker.goals_for_home_teams
+  end
+
+  def test_total_scores
+
+    assert_equal [7, 8, 3, 10], @stat_tracker.get_total_scores(@games)
   end
 end
