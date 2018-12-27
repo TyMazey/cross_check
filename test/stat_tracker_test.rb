@@ -170,7 +170,7 @@ class StatTrackerTest < Minitest::Test
 
   def test_it_can_find_the_team_with_biggest_dif_btween_away_and_home_win
 
-    assert_equal ["Devils", "Rangers"], @stat_tracker.worst_fans
+    assert_equal [], @stat_tracker.worst_fans
   end
 
   def test_it_can_return_all_team_information_for_a_team
