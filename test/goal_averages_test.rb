@@ -37,6 +37,7 @@ class GoalAveragesTest < Minitest::Test
   def test_it_can_calculate_average_goals_for_home_and_away_games
     assert_equal 3.25, @stat_tracker.calc_average_goals(@games, true)
     assert_equal 3.75, @stat_tracker.calc_average_goals(@games, false)
+    assert_equal 0, @stat_tracker.calc_average_goals([], true)
   end
 
   def test_goals_for_visitors_and_home_teams

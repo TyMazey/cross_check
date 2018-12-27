@@ -79,4 +79,27 @@ class GameAveragesTest < Minitest::Test
 
     assert_equal expected, @stat_tracker.batch_map_hash_to_win_percentage(grouped_games)
   end
+
+  def test_it_can_return_teams_win_loss_records
+    @game_1.stubs(outcome: "home", home_team_id: 1, away_team_id: 2)
+    @game_2.stubs(outcome: "away", home_team_id: 1, away_team_id: 2)
+    @game_3.stubs(outcome: "home", home_team_id: 2, away_team_id: 1)
+    @stat_tracker.games.all << @game_1
+    @stat_tracker.games.all << @game_2
+    @stat_tracker.games.all << @game_3
+
+    expected = {2 => {
+      :wins => 1,
+      :losses => 2
+      }
+    }
+    expected_1 = {1 => {
+      :wins => 2,
+      :losses => 1
+      }
+    }
+
+    assert_equal expected, @stat_tracker.win_loss_record(1)
+    assert_equal expected_1, @stat_tracker.win_loss_record(2)
+  end
 end

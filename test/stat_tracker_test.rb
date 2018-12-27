@@ -197,6 +197,7 @@ class StatTrackerTest < Minitest::Test
   def test_it_can_determine_average_win_percentage
     assert_equal 100.00, @stat_tracker.average_win_percentage(6)
     assert_equal 0.00, @stat_tracker.average_win_percentage(3)
+    assert_equal 0.0, @stat_tracker.average_win_percentage(8)
   end
 
   def test_it_can_determine_biggest_blowout_for_a_team

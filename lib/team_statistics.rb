@@ -70,27 +70,4 @@ module TeamStatistics
   def head_to_head(team, team_against)
     win_loss_record(team)[team_against]
   end
-
-  def win_loss_record(team)
-    games = {}
-    @games.find_all_by_team(team).each do |game|
-      if game.home_team_id == team
-        games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
-        if game.outcome.include?("home")
-          games[game.away_team_id][:wins] += 1
-        else
-          games[game.away_team_id][:losses] += 1
-        end
-      else
-        games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
-        if game.outcome.include?("away")
-          games[game.home_team_id][:wins] += 1
-        else
-          games[game.home_team_id][:losses] += 1
-        end
-      end
-    end
-    return games
-  end
-
 end
