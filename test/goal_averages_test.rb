@@ -24,4 +24,13 @@ class GoalAveragesTest < Minitest::Test
 
     assert_equal expected, @stat_tracker.goals_scored_by_team(@games)
   end
+
+  def test_it_can_return_goals_each_team_has_allowed
+    expected = {1 => 11,
+                2 => 9,
+                3 => 8
+    }
+
+    assert_equal expected, @stat_tracker.goals_allowed_by_team(@games)
+  end
 end
