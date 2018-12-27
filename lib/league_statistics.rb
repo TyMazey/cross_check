@@ -1,7 +1,9 @@
 require_relative './goal_averages'
+require_relative './game_averages'
 
 module LeagueStatistics
-  include GoalAverages
+  include GoalAverages,
+          GameAverages
 
   def count_of_teams
     @teams.all.count
@@ -70,7 +72,8 @@ module LeagueStatistics
   def best_fans
     teams_wins = {}
     @teams.all.each do |team|
-      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
+      (teams_wins[team] = calc_home_win_percentages(team.id, @games.all) -
+      calc_away_win_percentages(team.id, @games.all))
     end
     best_fans = teams_wins.max_by do |team, percentages|
       percentages
@@ -81,7 +84,8 @@ module LeagueStatistics
   def worst_fans
     teams_wins = {}
     @teams.all.each do |team|
-      teams_wins[team] = calc_home_win_percentages(team.id, @games.all) - calc_away_win_percentages(team.id, @games.all)
+      teams_wins[team] = (calc_home_win_percentages(team.id, @games.all) -
+      calc_away_win_percentages(team.id, @games.all))
     end
     worst_fans = teams_wins.find_all do |team, percentages|
       percentages < 50

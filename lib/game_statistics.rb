@@ -1,14 +1,16 @@
 require_relative './game_averages'
+require_relative './goal_averages'
 
 module GameStatistics
-  include GameAverages
+  include GameAverages,
+          GoalAverages
 
   def highest_total_score
-    @games.get_total_scores(@games.all).max
+    get_total_scores(@games.all).max
   end
 
   def lowest_total_score
-    @games.get_total_scores(@games.all).min
+    get_total_scores(@games.all).min
   end
 
   def biggest_blowout(games = @games.all)
@@ -30,11 +32,13 @@ module GameStatistics
   end
 
   def percentage_home_wins
-    calc_wins("home")
+    win_count = @games.all.count {|game| game.outcome.include?("home")}.to_f
+    win_count / @games.all.count * 100
   end
 
   def percentage_visitor_wins
-    calc_wins("away")
+    win_count = @games.all.count {|game| game.outcome.include?("away")}.to_f
+    win_count / @games.all.count * 100
   end
 
   def season_with_most_games
@@ -57,7 +61,7 @@ module GameStatistics
   end
 
   def average_goals_per_game(games = @games.all)
-    (@games.get_total_scores(games).sum.to_f / games.count).round(2)
+    (get_total_scores(games).sum.to_f / games.count).round(2)
   end
 
   def average_goals_by_season

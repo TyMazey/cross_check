@@ -44,4 +44,20 @@ module GoalAverages
     teams_home_goals
   end
 
+  def get_total_scores(games)
+    games.map do |game|
+      game.away_goals + game.home_goals
+    end
+  end
+
+  def collection_of_goals_scored_by_team(team_id)
+    @games.find_all_by_team(team_id).map do |game|
+      if game.away_team_id == team_id
+        game.away_goals
+      else
+        game.home_goals
+      end
+    end
+  end
+
 end

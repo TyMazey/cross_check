@@ -1,4 +1,4 @@
-require_relative 'test_helper.rb'
+require_relative 'test_helper'
 
 class GameTest < Minitest::Test
 
@@ -16,7 +16,7 @@ class GameTest < Minitest::Test
   @game = Game.new(attributes)
   end
 
-  def test_it_exsist
+  def test_it_exsists
 
     assert_instance_of Game, @game
   end
