@@ -25,4 +25,5 @@ class StatTracker
     stat_tracker = self.new
     stat_tracker.from_csv(locations)
   end
+
 end
