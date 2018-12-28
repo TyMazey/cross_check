@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Season List</title>
+    <link rel="stylesheet" href="/styles/style.css">
+  </head>
+  <body>
+    <h1>Select a Season</h1>
+    <%@@stat_tracker.games.group_games_by(:season).keys.each do |season|%>
+    <a href="season_statistics?<%=season%>"><%="#{season.to_s[0..3]} - #{season.to_s[4..-1]}"%></a>
+    <%end%>
+  </body>
+</html>

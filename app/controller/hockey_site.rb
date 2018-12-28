@@ -26,10 +26,6 @@ class HockeySite
     render_view('/error', '404')
   end
 
-  def self.about
-    render_view('about.html')
-  end
-
   def self.render_view(page, code = '200')
     renderer = ERB.new(File.read("./app/views#{page}.html.erb"))
     rendered_page = renderer.result(get_binding)

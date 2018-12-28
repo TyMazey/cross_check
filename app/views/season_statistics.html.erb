@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Season Statistics</title>
+    <link rel="stylesheet" href="/styles/style.css">
+  </head>
+  <body>
+    <h1>Season Statistics</h1>
+    <p>Biggest Bust: <%=@@stat_tracker.biggest_bust(@@query.to_i)%></p>
+    <p>Biggest Surprise: <%=@@stat_tracker.biggest_surprise(@@query.to_i)%></p>
+    <select class="teams" name="fuck me">
+      <%@@stat_tracker.teams.all.each do |team|%>
+      <option value="<%=team.id%>"><%=team.team_name%></option>
+      <%end%>
+    </select>
+  </body>
+</html>
