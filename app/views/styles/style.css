@@ -9,7 +9,8 @@ body {
 }
 
 .topnav {
-  width: 250px;
+  height: : 250px;
+  align-content: : center;
   background-color: limegreen;
   border-radius: 50%;
   -webkit-transition: -webkit-transform 900000s ease-in-out;
@@ -19,4 +20,8 @@ body {
 .topnav:hover {
   -webkit-transform: rotate(19999999999999deg);
           transform: rotate(19999999999999deg);
+}
+
+a {
+  display: block;
 }
