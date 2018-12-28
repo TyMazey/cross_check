@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Team List</title>
+    <link rel="stylesheet" href="/styles/style.css">
+  </head>
+  <body>
+    <p><%@@stat_tracker.teams.all.each do |team|%>
+      <a href="team_statistics?team=<%=team.id%>"><%=team.short_name%></a>
+    <%end%>
+    </p>
+  </body>
+</html>

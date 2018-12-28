@@ -34,8 +34,8 @@ module Summaries
         summary[:average_goals_scored] = 0.0
         summary[:average_goals_against] = 0.0
       else
-        summary[:average_goals_scored] = summary[:goals_scored].to_f / game_count
-        summary[:average_goals_against] = summary[:goals_against].to_f / game_count
+        summary[:average_goals_scored] = (summary[:goals_scored].to_f / game_count).round(2)
+        summary[:average_goals_against] = (summary[:goals_against].to_f / game_count).round(2)
       end
     end
     summary

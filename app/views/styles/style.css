@@ -9,7 +9,8 @@ body {
 }
 
 .topnav {
-  width: 250px;
+  height: : 250px;
+  align-content: : center;
   margin: auto;
   background-color: limegreen;
   border-radius: 50%;
