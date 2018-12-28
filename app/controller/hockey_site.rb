@@ -2,8 +2,11 @@ require 'rack'
 
 class HockeySite
   def self.call(env)
-    case env["PATH_INFO"]
-    when '/' then index
+    path = env["PATH_INFO"]
+    if path == '/'
+      index
+    elsif File.exist?("./app/views/#{path}.html")
+      path
     else error
     end
   end
