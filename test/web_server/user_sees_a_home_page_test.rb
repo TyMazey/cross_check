@@ -11,7 +11,7 @@ class HomePageTest < CapybaraTestCase
   def test_it_has_error_page_for_unknown_urls
     visit '/not_found'
 
-    assert page.has_content("Page Not Found")
+    assert page.has_content?("404 Page Not Found")
     assert_equal 404, page.status_code
   end
 end
