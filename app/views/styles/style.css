@@ -8,15 +8,15 @@ body {
   font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
-.spam {
-  width: 125px;
+.topnav {
+  width: 250px;
   background-color: limegreen;
   border-radius: 50%;
   -webkit-transition: -webkit-transform 900000s ease-in-out;
           transition:         transform 900000s ease-in-out;
 }
 
-.spam:hover {
+.topnav:hover {
   -webkit-transform: rotate(19999999999999deg);
           transform: rotate(19999999999999deg);
 }
