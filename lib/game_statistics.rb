@@ -47,7 +47,7 @@ module GameStatistics
     end.first
   end
 
-  def season_with_least_games
+  def season_with_fewest_games
     @games.group_games_by(:season).min_by do |season, games|
       games.count
     end.first

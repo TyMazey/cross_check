@@ -7,7 +7,8 @@ class HomePageTest < CapybaraTestCase
 
     assert_equal 200, page.status_code
     assert_equal '/game_statistics', current_path
-    #assert page.has_content?("Game Statistics")
+    assert page.has_content?("Game Statistics")
+
   end
 
   def test_user_can_nav_to_league_stats_page
@@ -22,10 +23,11 @@ class HomePageTest < CapybaraTestCase
   def test_user_can_nav_to_season_stats_page
     visit '/'
     click_on 'Season Statistics'
+    click_on '2013 - 2014'
 
     assert_equal 200, page.status_code
     assert_equal '/season_statistics', current_path
-    #assert page.has_content?("Season Statistics")
+    assert page.has_content?("Season Statistics")
   end
 
   def test_user_can_nav_to_team_stats_page
@@ -35,5 +37,14 @@ class HomePageTest < CapybaraTestCase
     assert_equal 200, page.status_code
     assert_equal '/team_list', current_path
     #assert page.has_content?("Team List")
+  end
+
+  def test_user_can_navigate_to_about_page
+    visit '/'
+    click_on 'About Project'
+
+    assert_equal 200, page.status_code
+    assert_equal '/about', current_path
+    assert page.has_content?("About")
   end
 end
