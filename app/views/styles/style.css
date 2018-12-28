@@ -27,3 +27,8 @@ a {
   margin: auto;
   padding-left: 70px;
 }
+
+table {
+  width: 25%;
+  background-color: grey;
+}

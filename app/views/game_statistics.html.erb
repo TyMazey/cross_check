@@ -16,9 +16,35 @@
       <p>Percentage Visitor Wins: <%=@@stat_tracker.percentage_visitor_wins%></p>
       <p>Season With Most Games: <%=@@stat_tracker.season_with_most_games%></p>
       <p>Season With Fewest Games: <%=@@stat_tracker.season_with_fewest_games%></p>
-      <p>Count of Games by Season: <%=@@stat_tracker.count_of_games_by_season%></p>
+      <p>Count of Games by Season:
+        <table>
+          <tr>
+            <th>Season</th>
+            <th>Count of Games</th>
+          </tr>
+          <%@@stat_tracker.count_of_games_by_season.each do |season, count|%>
+          <tr>
+            <td><%=season%></td>
+            <td><%=count%></td>
+          </tr>
+          <%end%>
+        </table>
+      </p>
       <p>Average Goals per Game: <%=@@stat_tracker.average_goals_per_game%></p>
-      <p>Average Goals by Season: <%=@@stat_tracker.average_goals_by_season%></p>
+      <p>Average Goals by Season:
+        <table>
+          <tr>
+            <th>Season</th>
+            <th>Average Goals</th>
+          </tr>
+            <%@@stat_tracker.average_goals_by_season.each do |season, average|%>
+            <tr>
+              <td><%=season%></td>
+              <td><%=average%></td>
+            </tr>
+            <%end%>
+        </table>
+      </p>
     </div>
   </body>
 </html>
