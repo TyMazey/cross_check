@@ -6,18 +6,19 @@ class HockeySite
     if path == '/'
       index
     elsif File.exist?("./app/views/#{path}.html")
-      call = path.gsub('/','')
-      send(call)
+      render_view(path)
+    elsif File.exist?("./app/views/#{path}")
+      render_style(path)
     else error
     end
   end
 
   def self.index
-    render_view('index.html')
+    render_view('/index')
   end
 
   def self.error
-    render_view('error.html', '404')
+    render_view('/error', '404')
   end
 
   def self.about
@@ -25,6 +26,10 @@ class HockeySite
   end
 
   def self.render_view(page, code = '200')
-    [code, {'Content-Type' => 'text/html'}, [File.read("./app/views/#{page}")]]
+    [code, {'Content-Type' => 'text/html'}, [File.read("./app/views#{page}.html")]]
+  end
+
+  def self.render_style(page, code = '200')
+    [code, {'Content-Type' => 'text/css'}, [File.read("./app/views#{page}")]]
   end
 end
