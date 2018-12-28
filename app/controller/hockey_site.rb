@@ -7,7 +7,8 @@ class HockeySite
                  teams: "./data/team_info.csv")
   def self.call(env)
     path = env["PATH_INFO"]
-    @@query = env["QUERY_STRING"].split("=").last
+    # require 'pry'; binding.pry
+    @@query = env["QUERY_STRING"].split("&").map{|x|x.split("=")}.to_h
     if path == '/'
       index
     elsif File.exist?("./app/views#{path}.html.erb")
@@ -24,10 +25,6 @@ class HockeySite
 
   def self.error
     render_view('/error', '404')
-  end
-
-  def self.about
-    render_view('about.html')
   end
 
   def self.render_view(page, code = '200')

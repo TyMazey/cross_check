@@ -63,7 +63,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_season_with_least_games
-    assert_equal 20122013, @stat_tracker.season_with_least_games
+    assert_equal 20122013, @stat_tracker.season_with_fewest_games
   end
 
   def test_it_can_count_games_by_season
@@ -230,6 +230,7 @@ class StatTrackerTest < Minitest::Test
     }
 
     assert_equal exact, @stat_tracker.head_to_head(6, 3)
+    assert_equal ({wins: 0, losses: 2}), @stat_tracker.head_to_head(3, 6)
   end
 
   def test_it_can_return_a_seasonal_summary_for_a_team

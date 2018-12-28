@@ -1,6 +1,6 @@
 require './test/test_helper'
 
-class HomePageTest < CapybaraTestCase
+class AboutPageTest < CapybaraTestCase
   def test_user_can_navigate_to_about_page
     visit '/'
     click_on "About"
