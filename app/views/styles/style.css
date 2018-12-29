@@ -1,33 +1,46 @@
 h1 {
   color: yellow;
+  float: left;
 }
 
 body {
   background-color: hotpink;
-  background-image: url("https://goo.gl/images/UKy7pE")
+  /* background-image: url("https://i.gifer.com/PL7r.gif"); */
   font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
+.home {
+  height: 30px;
+  width: 30px;
+  padding-top: 25px;
+}
+
 .topnav {
-  height: : 250px;
-  align-content: : center;
+  top: 0px;
+  width: auto;
+  height: 75px;
   margin: auto;
-  background-color: limegreen;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform 900000s ease-in-out;
-          transition:         transform 900000s ease-in-out;
+  text-align: center;
+  border: 5px solid#ccc;
+  background-color: DarkGrey;
 }
 
-.topnav:hover {
-  -webkit-transform: rotate(19999999999999deg);
-          transform: rotate(19999999999999deg);
+.topnav li {
+  display:inline;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
-a {
-  display: block;
-  margin: auto;
-  padding-left: 70px;
+.topnav a {
+  display: inline-block;
 }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 
 table {
   width: 25%;
