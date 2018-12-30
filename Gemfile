@@ -6,3 +6,5 @@ gem "rake"
 gem "capybara"
 gem "launchy"
 gem "rack"
+gem 'simplecov'
+gem "mocha"
