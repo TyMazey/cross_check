@@ -13,8 +13,8 @@ class StatTracker
           TeamStatistics,
           LeagueStatistics
 
-  attr_reader :games,
-              :teams
+  # attr_reader :games,
+  #             :teams
 
   def initialize
     @games = Games.new
