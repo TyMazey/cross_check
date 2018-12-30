@@ -5,6 +5,10 @@ require 'erb'
 class HockeySite
   @@stat_tracker = StatTracker.from_csv(games: "./data/game.csv",
                  teams: "./data/team_info.csv")
+
+  @@league_state_view = {
+    highest_scoring_home_team: set_the_team_name_from_a_helper_method
+  }
   def self.call(env)
     path = env["PATH_INFO"]
     # require 'pry'; binding.pry
