@@ -26,4 +26,10 @@ class StatTracker
     stat_tracker.from_csv(locations)
   end
 
+  def highest_scoring_visitor
+    LeagueStatistics.highest_scoring_visitor
+    # OR
+    SomeOtherLibrary.same_result_through_a_different_method
+  end
+
 end
