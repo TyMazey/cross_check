@@ -17,9 +17,14 @@
         <li><a href="about">About Project</a></li>
       </ul>
     </div>
-    <p><%@@stat_tracker.teams.all.each do |team|%>
-      <a href="team_statistics?team=<%=team.id%>"><%=team.short_name%></a>
-    <%end%>
-    </p>
+    <div class='team-option-grid'>
+      <%@@stat_tracker.teams.all.each do |team|%>
+        <div class="team-option">
+          <a href="team_statistics?team=<%=team.id%>">
+            <img src="/images/<%=team.id%>.png" alt="<%=team.team_name%>">
+          </a>
+        </div>
+      <%end%>
+    </div>
   </body>
 </html>

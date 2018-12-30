@@ -110,6 +110,24 @@ body {
   height: 99%;
   width: 99%;
 }
+.team-option-gid {
+  display: block;
+  width: 95%;
+  padding-top: 2%;
+  padding-left: 2%;
+}
+
+.team-option {
+  display: inline-block;
+  color: hotpink;
+  width: 15%;
+  height: 15%;
+}
+
+.team-option img {
+  display: block;
+  width: 100%
+}
 
 table {
   width: 25%;
