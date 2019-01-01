@@ -110,6 +110,7 @@ body {
   height: 99%;
   width: 99%;
 }
+
 .team-option-gid {
   display: block;
   width: 95%;
@@ -120,16 +121,38 @@ body {
 .team-option {
   display: inline-block;
   color: hotpink;
-  width: 15%;
-  height: 15%;
+  max-width: 160px;
+  max-height: 160px;
 }
 
 .team-option img {
   display: block;
-  width: 100%
+  width: 100%;
+  padding-left: 3px;
 }
 
 table {
   width: 25%;
-  background-color: grey;
+  background-color: #eee;
+}
+
+tr {
+  text-align: center;
+}
+
+tr:nth-child(even){
+  background-color: #ccc;
+}
+
+table, td, th {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+a {
+  display: block;
+  padding-top: 2%;
+  width: fit-content;
+  text-decoration: none;
+  color: black;
 }
