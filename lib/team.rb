@@ -8,8 +8,8 @@ class Team
               :link
 
   def initialize(attributes)
-    @id = attributes[:team_id].to_i
-    @franchise_id = attributes[:franchiseid].to_i
+    @id = attributes[:team_id]
+    @franchise_id = attributes[:franchiseid]
     @short_name = attributes[:shortname]
     @team_name = attributes[:teamname]
     @abbreviation = attributes[:abbreviation]
