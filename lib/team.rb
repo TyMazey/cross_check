@@ -18,12 +18,12 @@ class Team
 
   def information
     {
-      team_id: @id,
-      franchiseId: @franchise_id,
-      shortName: @short_name,
-      teamName: @team_name,
-      abbreviation: @abbreviation,
-      link: @link
+      "team_id" => @id,
+      "franchise_id" => @franchise_id,
+      "short_name" => @short_name,
+      "team_name" => @team_name,
+      "abbreviation" => @abbreviation,
+      "link" => @link
     }
   end
 end
