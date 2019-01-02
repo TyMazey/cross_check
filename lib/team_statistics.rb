@@ -48,17 +48,17 @@ module TeamStatistics
   def favorite_opponent(team_id)
     team_history = win_loss_record(team_id)
     highest_percentage = team_history.max_by do |opponent, history|
-      history[:wins].to_f / history[:losses] * 100.0
+      history
     end
-    @teams.find_by_id(highest_percentage.first).team_name
+    highest_percentage.first
   end
 
   def rival(team_id)
     team_history = win_loss_record(team_id)
     lowest_percentage = team_history.min_by do |opponent, history|
-      history[:wins].to_f / history[:losses] * 100.0
+      history
     end
-    @teams.find_by_id(lowest_percentage.first).team_name
+    lowest_percentage.first
   end
 
   def biggest_team_blowout(id)
@@ -69,7 +69,7 @@ module TeamStatistics
     biggest_blowout(@games.find_losses_by_team(id))
   end
 
-  def head_to_head(team, team_against)
-    win_loss_record(team)[team_against]
+  def head_to_head(team)
+    win_loss_record(team)
   end
 end

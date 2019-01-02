@@ -58,22 +58,15 @@ module GameAverages
   def win_loss_record(team)
     games = {}
     @games.find_all_by_team(team).each do |game|
-      if game.home_team_id == team
-        games[game.away_team_id] = {wins: 0, losses: 0} unless games[game.away_team_id]
-        if game.outcome.include?("home")
-          games[game.away_team_id][:wins] += 1
-        else
-          games[game.away_team_id][:losses] += 1
-        end
-      else
-        games[game.home_team_id] = {wins: 0, losses: 0} unless games[game.home_team_id]
-        if game.outcome.include?("away")
-          games[game.home_team_id][:wins] += 1
-        else
-          games[game.home_team_id][:losses] += 1
-        end
-      end
+      games[game.home_team_id] = [] unless games[game.home_team_id]
+      games[game.away_team_id] = [] unless games[game.away_team_id]
+      games[game.home_team_id] << game
+      games[game.home_team_id] << game
     end
-    return games
+    final = {}
+    games.each do |current, games|
+      final[@teams.find_by_id(current).team_name] = calculate_win_percentage(current, games)
+    end
+    return final
   end
 end
