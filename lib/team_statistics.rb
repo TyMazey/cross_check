@@ -10,7 +10,8 @@ module TeamStatistics
     }
     season_win_percentage = batch_map_hash_to_win_percentage(games_by_season)
     max = season_win_percentage[team_id].max_by {|season, percentage| percentage}
-    return max.first
+    return max.first if max
+    return nil
   end
 
   def worst_season(team_id)
@@ -19,7 +20,8 @@ module TeamStatistics
     }
     season_win_percentage = batch_map_hash_to_win_percentage(games_by_season)
     min = season_win_percentage[team_id].min_by {|season, percentage| percentage}
-    return min.first
+    return min.first if min
+    return nil
   end
 
   def average_win_percentage(team_id)

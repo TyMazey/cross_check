@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="/styles/style.css">
   </head>
   <body>
+    <div class="topnav">
+      <img class="home" src="/images/puck.png" alt="home">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="game_statistics">Game Statistics</a></li>
+        <li><a href="league_statistics">League Statistics</a></li>
+        <li><a href="team_list" class="active">Team Statistics</a></li>
+        <li><a href="season_list">Season Statistics</a></li>
+        <li><a href="about">About Project</a></li>
+      </ul>
+    </div>
     <p>Team Info:
       <table>
         <tr>
@@ -38,9 +49,9 @@
       </tr>
       <%@@stat_tracker.win_loss_record(@@query["team"].to_i).each do |team, record|%>
       <tr>
-        <td><%=@@stat_tracker.teams.find_by_id(team).short_name%></th>
-        <td><%=record[:wins]%></th>
-        <td><%=record[:losses]%></th>
+        <td><%=@@stat_tracker.teams.find_by_id(team).short_name%></td>
+        <td><%=record[:wins]%></td>
+        <td><%=record[:losses]%></td>
       </tr>
       <%end%>
     </table>
@@ -66,6 +77,15 @@
       </tr>
     </table>
     <%end%>
+    <%=@@stat_tracker.seasonal_summary(@@query["team"].to_i)%>
+    <%@@stat_tracker.seasonal_summary(@@query["team"].to_i).each do |season|%>
+    <p>Season: <%=season.first%>
+      <%season.last.keys.each do |type|%>
+      <p><%=type%>
+      </p>
+      <%end%>
+    </p>
+
     <%end%>
   </body>
 </html>

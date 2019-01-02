@@ -1,35 +1,158 @@
 h1 {
-  color: yellow;
+  display: block;
+  text-align: center;
 }
 
 body {
-  background-color: hotpink;
-  background-image: url("https://goo.gl/images/UKy7pE")
-  font-family: "Comic Sans MS", cursive, sans-serif;
+  background-color: #eee;
+  padding: 0px;
+  padding-left: 150px;
+  font-family: Helvetica, sans-serif;
+}
+
+.index-grid {
+  padding-left: 0px;
+}
+
+.home {
+  height: 50px;
+  width: 125px;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 
 .topnav {
-  height: : 250px;
-  align-content: : center;
-  margin: auto;
-  background-color: limegreen;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform 900000s ease-in-out;
-          transition:         transform 900000s ease-in-out;
-}
-
-.topnav:hover {
-  -webkit-transform: rotate(19999999999999deg);
-          transform: rotate(19999999999999deg);
-}
-
-a {
   display: block;
-  margin: auto;
-  padding-left: 70px;
+  width: 150px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #ccc
+}
+
+.topnav ul {
+  display: block;
+  padding: 0px;
+  width: 100%;
+  text-align: center;
+}
+
+.topnav li {
+  display: block;
+  height: 30px;
+  text-decoration: none;
+}
+
+
+.topnav a {
+  display: block;
+  height: 25px;
+  width: 100%;
+  padding-top: 5px;
+  text-allign: center;
+  text-decoration: none;
+  color: black;
+}
+
+.topnav a:hover {
+  background-color: #444;
+  color: white;
+}
+
+.topnav a.active {
+  background-color: #7f8dd2;
+}
+
+.option-grid {
+  display: block;
+  padding-left: 5%;
+  padding-right: 5%;
+  width: 90%;
+}
+
+.option {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  background-color: #888;
+  width: 27vw;
+  height: 27vw;
+  max-height: 400px;
+  margin: 1%;
+}
+
+.option a:hover {
+  border-style: solid;
+  border-size: 3px;
+  border-color: #7f8dd2;
+}
+
+.option img {
+  display: block;
+  width: 80%;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+
+.option p {
+  width: 100%;
+  position: absolute;
+  bottom: 10%;
+  text-align: center;
+  color: white;
+}
+
+.option a {
+  display: block;
+  height: 97%;
+  width: 98.5%;
+}
+
+.team-option-gid {
+  display: block;
+  width: 95%;
+  padding-top: 2%;
+  padding-left: 2%;
+}
+
+.team-option {
+  display: inline-block;
+  color: hotpink;
+  max-width: 160px;
+  max-height: 160px;
+}
+
+.team-option img {
+  display: block;
+  width: 100%;
+  padding-left: 3px;
 }
 
 table {
   width: 25%;
-  background-color: grey;
+  background-color: #eee;
+}
+
+tr {
+  text-align: center;
+}
+
+tr:nth-child(even){
+  background-color: #ccc;
+}
+
+table, td, th {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+a {
+  display: block;
+  padding-top: 2%;
+  width: fit-content;
+  text-decoration: none;
+  color: black;
 }

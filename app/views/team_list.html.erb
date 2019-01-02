@@ -6,9 +6,26 @@
     <link rel="stylesheet" href="/styles/style.css">
   </head>
   <body>
-    <p><%@@stat_tracker.teams.all.each do |team|%>
-      <a href="team_statistics?team=<%=team.id%>"><%=team.short_name%></a>
-    <%end%>
-    </p>
+    <div class="topnav">
+      <img class="home" src="/images/puck.png" alt="home">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="game_statistics">Game Statistics</a></li>
+        <li><a href="league_statistics">League Statistics</a></li>
+        <li><a href="team_list" class="active">Team Statistics</a></li>
+        <li><a href="season_list">Season Statistics</a></li>
+        <li><a href="about">About Project</a></li>
+      </ul>
+    </div>
+    <h1>Select a Team</h1>
+    <div class='team-option-grid'>
+      <%@@stat_tracker.teams.all.each do |team|%>
+        <div class="team-option">
+          <a href="team_statistics?team=<%=team.id%>">
+            <img src="/images/<%=team.id%>.png" alt="<%=team.team_name%>">
+          </a>
+        </div>
+      <%end%>
+    </div>
   </body>
 </html>
