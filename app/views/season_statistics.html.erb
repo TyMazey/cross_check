@@ -7,12 +7,13 @@
   </head>
   <body>
     <div class="topnav">
+      <img class="home" src="/images/puck.png" alt="home">
       <ul>
-        <li><a href="/"><img class="home" src="/images/home.png" alt=""></a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="game_statistics">Game Statistics</a></li>
         <li><a href="league_statistics">League Statistics</a></li>
         <li><a href="team_list">Team Statistics</a></li>
-        <li><a href="season_list">Season Statistics</a></li>
+        <li><a href="season_list" class="active">Season Statistics</a></li>
         <li><a href="about">About Project</a></li>
       </ul>
     </div>
@@ -20,13 +21,17 @@
     <p>Biggest Bust: <%=@@stat_tracker.biggest_bust(@@query["season"].to_i)%></p>
     <p>Biggest Surprise: <%=@@stat_tracker.biggest_surprise(@@query["season"].to_i)%></p>
     <%if @@query["team"]%>
-    <p>Summary: <%=@@stat_tracker.season_summary(@@query["team"].to_i)%></p>
+    <p>Summary: <%=@@stat_tracker.season_summary(@@query["season"].to_i, @@query["team"].to_i)%></p>
     <%else%>
-    <select class="teams" name="please">
+    <div class='team-option-grid'>
       <%@@stat_tracker.teams.all.each do |team|%>
-      <option value="<%=team.id%>"><%=team.team_name%></option>
+        <div class="team-option">
+          <a href="season_statistics?season=<%=@@query["season"]%>&team=<%=team.id%>">
+            <img src="/images/<%=team.id%>.png" alt="<%=team.team_name%>">
+          </a>
+        </div>
       <%end%>
-    </select>
+    </div>
     <%end%>
   </body>
 </html>

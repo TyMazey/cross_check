@@ -7,15 +7,17 @@
   </head>
   <body>
     <div class="topnav">
+      <img class="home" src="/images/puck.png" alt="home">
       <ul>
-        <li><a href="/"><img class="home" src="/images/home.png" alt=""></a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="game_statistics">Game Statistics</a></li>
-        <li><a href="league_statistics">League Statistics</a></li>
+        <li><a href="league_statistics" class="active">League Statistics</a></li>
         <li><a href="team_list">Team Statistics</a></li>
         <li><a href="season_list">Season Statistics</a></li>
         <li><a href="about">About Project</a></li>
       </ul>
     </div>
+    <h1>League Statistics</h1>
     <p>Count of Teams: <%=@@stat_tracker.count_of_teams%></p>
     <p>Best Offense: <%=@@stat_tracker.best_offense%></p>
     <p>Worst Offense: <%=@@stat_tracker.worst_offense%></p>
