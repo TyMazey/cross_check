@@ -43,7 +43,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_precentage_of_games_home_teams_have_won
-    assert_equal 100.0, @stat_tracker.percentage_home_wins
+    assert_equal 1.0, @stat_tracker.percentage_home_wins
   end
 
   def test_it_can_find_precentage_of_games_away_teams_have_won
@@ -59,16 +59,16 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_season_with_most_games
-    assert_equal 20122013, @stat_tracker.season_with_most_games
+    assert_equal "20122013", @stat_tracker.season_with_most_games
   end
 
   def test_it_can_determine_season_with_least_games
-    assert_equal 20122013, @stat_tracker.season_with_fewest_games
+    assert_equal "20122013", @stat_tracker.season_with_fewest_games
   end
 
   def test_it_can_count_games_by_season
     # skip
-    expected = {20122013 => 2}
+    expected = {"20122013" => 2}
 
     assert_equal expected, @stat_tracker.count_of_games_by_season
   end
@@ -78,7 +78,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_average_goals_per_game_by_season
-    expected = {20122013 => 6.0}
+    expected = {"20122013" => 6.0}
 
     assert_equal expected, @stat_tracker.average_goals_by_season
   end
@@ -88,13 +88,13 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_count_goals_scored_by_team
-    expected = {6 => 8, 3 => 4}
+    expected = {"6" => 8, "3" => 4}
 
     assert_equal expected, @stat_tracker.goals_scored_by_team
   end
 
   def test_it_can_count_goals_allowed_by_team
-    expected = {3 => 8, 6 => 4}
+    expected = {"3" => 8, "6" => 4}
 
     assert_equal expected, @stat_tracker.goals_allowed_by_team
   end
@@ -144,7 +144,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_return_a_season_summary_for_a_team
-    expected = {preseason: { win_percentage: 100.0,
+    expected = {preseason: { win_percentage: 1.0,
                              goals_scored: 8,
                              goals_against: 4},
            regular_season: { win_percentage: 0.0,
@@ -152,15 +152,15 @@ class StatTrackerTest < Minitest::Test
                              goals_against: 0}
                }
 
-    assert_equal expected, @stat_tracker.season_summary(20122013, 6)
+    assert_equal expected, @stat_tracker.season_summary("20122013", "6")
   end
 
   def test_it_can_determine_biggest_bust
-    assert_equal "Bruins", @stat_tracker.biggest_bust(20122013)
+    assert_equal "Bruins", @stat_tracker.biggest_bust("20122013")
   end
 
   def test_it_can_determine_biggest_surprise
-    assert_equal "Rangers", @stat_tracker.biggest_surprise(20122013)
+    assert_equal "Rangers", @stat_tracker.biggest_surprise("20122013")
   end
 
   def test_it_can_determain_best_fans
@@ -175,77 +175,74 @@ class StatTrackerTest < Minitest::Test
 
   def test_it_can_return_all_team_information_for_a_team
     expected = {
-                  team_id: 1,
-                  franchiseId: 23,
-                  shortName: "New Jersey",
-                  teamName: "Devils",
-                  abbreviation: "NJD",
-                  link: "/api/v1/teams/1"
+                  "team_id" => "1",
+                  "franchise_id" => "23",
+                  "short_name" => "New Jersey",
+                  "team_name" => "Devils",
+                  "abbreviation" => "NJD",
+                  "link" => "/api/v1/teams/1"
                 }
 
-    assert_equal expected, @stat_tracker.team_info(1)
+    assert_equal expected, @stat_tracker.team_info("1")
   end
 
   def test_it_can_determine_best_season_for_team
-    assert_equal 20122013, @stat_tracker.best_season(3)
+    assert_equal "20122013", @stat_tracker.best_season("3")
   end
 
   def test_it_can_determine_worst_season_for_team
-    assert_equal 20122013, @stat_tracker.worst_season(3)
+    assert_equal "20122013", @stat_tracker.worst_season("3")
   end
 
   def test_it_can_determine_average_win_percentage
-    assert_equal 100.00, @stat_tracker.average_win_percentage(6)
-    assert_equal 0.00, @stat_tracker.average_win_percentage(3)
-    assert_equal 0.0, @stat_tracker.average_win_percentage(8)
+    assert_equal 1.0, @stat_tracker.average_win_percentage("6")
+    assert_equal 0.00, @stat_tracker.average_win_percentage("3")
+    assert_equal 0.0, @stat_tracker.average_win_percentage("8")
   end
 
   def test_it_can_determine_biggest_blowout_for_a_team
-    assert_equal 3, @stat_tracker.biggest_team_blowout(6)
+    assert_equal 3, @stat_tracker.biggest_team_blowout("6")
   end
 
   def test_it_can_determine_biggest_loss_for_a_team
-    assert_equal 3, @stat_tracker.worst_loss(3)
+    assert_equal 3, @stat_tracker.worst_loss("3")
   end
 
   def test_most_goals_scored_for_a_team
-    assert_equal 5, @stat_tracker.most_goals_scored(6)
+    assert_equal 5, @stat_tracker.most_goals_scored("6")
   end
 
   def test_fewest_goals_scored_for_a_team
-    assert_equal 3, @stat_tracker.fewest_goals_scored(6)
+    assert_equal 3, @stat_tracker.fewest_goals_scored("6")
   end
 
   def test_it_can_name_the_opponent_that_loses_most_against_a_team
-    assert_equal "Rangers", @stat_tracker.favorite_opponent(6)
+    assert_equal "Rangers", @stat_tracker.favorite_opponent("6")
   end
 
   def test_it_can_name_the_opponent_that_wins_most_against_a_team
-    assert_equal "Bruins", @stat_tracker.rival(3)
+    assert_equal "Bruins", @stat_tracker.rival("3")
   end
 
   def test_it_can_return_win_and_loss_record_against_specific_opponent
-    exact = { wins: 2,
-              losses: 0
-    }
+    exact = { "Rangers" => 1.0}
 
-    assert_equal exact, @stat_tracker.head_to_head(6, 3)
-    assert_equal ({wins: 0, losses: 2}), @stat_tracker.head_to_head(3, 6)
+    assert_equal exact, @stat_tracker.head_to_head("6")
   end
 
   def test_it_can_return_a_seasonal_summary_for_a_team
-    expected = {20122013 => {preseason: { win_percentage: 100.0,
-                                         goals_scored: 8,
-                                         goals_against: 4,
+    expected = {"20122013" => {preseason: { win_percentage: 1.0,
+                                         total_goals_scored: 8,
+                                         total_goals_against: 4,
                                          average_goals_scored: 4.0,
                                          average_goals_against: 2.0},
                        regular_season: { win_percentage: 0.0,
-                                         goals_scored: 0,
-                                         goals_against: 0,
+                                         total_goals_scored: 0,
+                                         total_goals_against: 0,
                                          average_goals_scored: 0.0,
                                          average_goals_against: 0.0}
                            }}
 
-    assert_equal expected, @stat_tracker.seasonal_summary(6)
+    assert_equal expected, @stat_tracker.seasonal_summary("6")
   end
 end

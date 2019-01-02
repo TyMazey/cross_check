@@ -20,7 +20,7 @@ class CSVReaderTest < Minitest::Test
     stat_tracker.load_games('./data/game_test.csv')
 
     assert_equal 2, stat_tracker.games.all.count
-    assert_equal 2012030221, stat_tracker.games.all.first.game_id
+    assert_equal "2012030221", stat_tracker.games.all.first.game_id
   end
 
   def test_it_can_generate_team_objects_from_csv
@@ -29,7 +29,7 @@ class CSVReaderTest < Minitest::Test
     stat_tracker.load_teams('./data/team_info.csv')
 
     assert_equal 33, stat_tracker.teams.all.count
-    assert_equal 1, stat_tracker.teams.all.first.id
+    assert_equal "1", stat_tracker.teams.all.first.id
     assert_equal "Thrashers", stat_tracker.teams.all.last.team_name
   end
 

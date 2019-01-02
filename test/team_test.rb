@@ -3,8 +3,8 @@ require_relative 'test_helper'
 class TeamTest < Minitest::Test
 
   def setup
-    attributes = {team_id: "1",
-                  franchiseid: "23",
+    attributes = {team_id: 1,
+                  franchiseid: 23,
                   shortname: "New Jersey",
                   teamname: "Devils",
                   abbreviation: "NJD",
@@ -41,12 +41,12 @@ class TeamTest < Minitest::Test
   end
 
   def test_it_can_return_all_attributes
-    expected =   {team_id: 1,
-                  franchiseId: 23,
-                  shortName: "New Jersey",
-                  teamName: "Devils",
-                  abbreviation: "NJD",
-                  link: "/api/v1/teams/1"}
+    expected =   {"team_id" => 1,
+                  "franchise_id" => 23,
+                  "short_name" => "New Jersey",
+                  "team_name" => "Devils",
+                  "abbreviation" => "NJD",
+                  "link" => "/api/v1/teams/1"}
 
     assert_equal expected, @team.information
   end

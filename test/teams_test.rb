@@ -19,20 +19,20 @@ class TeamsTest < Minitest::Test
   def test_it_can_create_new_teams
     @teams.create(@attributes)
 
-    assert_equal 1, @teams.all.first.id
+    assert_equal "1", @teams.all.first.id
   end
 
   def test_it_can_find_teams_by_id
     @teams.create(@attributes)
 
-    assert_equal "Devils", @teams.find_by_id(1).team_name
-    assert_nil @teams.find_by_id(32)
+    assert_equal "Devils", @teams.find_by_id("1").team_name
+    assert_nil @teams.find_by_id("32")
   end
 
   def test_it_can_find_teams_by_franchise_id
     @teams.create(@attributes)
 
-    assert_equal "Devils", @teams.find_by_franchise_id(23).team_name
-    assert_nil @teams.find_by_franchise_id(32)
+    assert_equal "Devils", @teams.find_by_franchise_id("23").team_name
+    assert_nil @teams.find_by_franchise_id("32")
   end
 end
