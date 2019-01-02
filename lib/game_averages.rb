@@ -61,11 +61,12 @@ module GameAverages
       games[game.home_team_id] = [] unless games[game.home_team_id]
       games[game.away_team_id] = [] unless games[game.away_team_id]
       games[game.home_team_id] << game
-      games[game.home_team_id] << game
+      games[game.away_team_id] << game
     end
+    games.delete(team)
     final = {}
     games.each do |current, games|
-      final[@teams.find_by_id(current).team_name] = calculate_win_percentage(current, games)
+      final[@teams.find_by_id(current).team_name] = calculate_win_percentage(team, games)
     end
     return final
   end
