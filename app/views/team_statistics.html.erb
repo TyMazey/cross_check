@@ -20,65 +20,64 @@
     <p>Team Info:
       <table>
         <tr>
-        <%@@stat_tracker.team_info(@@query["team"].to_i).keys.each do |key|%>
+        <%@@stat_tracker.team_info(@@query["team"]).keys.each do |key|%>
           <th><%=key%></th>
-          <%end%>
+        <%end%>
         </tr>
         <tr>
-          <%@@stat_tracker.team_info(@@query["team"].to_i).values.each do |value|%>
-          <td><%=value%></td>
+          <%@@stat_tracker.team_info(@@query["team"]).values.each do |value|%>
+            <td><%=value%></td>
           <%end%>
         </tr>
       </table>
     </p>
-    <p>Best Season: <%=@@stat_tracker.best_season(@@query["team"].to_i)%></p>
-    <p>Worst Season: <%=@@stat_tracker.worst_season(@@query["team"].to_i)%></p>
-    <p>Average Win Percentage: <%=@@stat_tracker.average_win_percentage(@@query["team"].to_i)%></p>
-    <p>Most Goals Scored: <%=@@stat_tracker.most_goals_scored(@@query["team"].to_i)%></p>
-    <p>Fewest Goals Scored: <%=@@stat_tracker.fewest_goals_scored(@@query["team"].to_i)%></p>
-    <p>Favorite Oppenent: <%=@@stat_tracker.favorite_opponent(@@query["team"].to_i)%></p>
-    <p>Rival: <%=@@stat_tracker.rival(@@query["team"].to_i)%></p>
-    <p>Biggest Blowout: <%=@@stat_tracker.biggest_team_blowout(@@query["team"].to_i)%></p>
-    <p>Worst Loss: <%=@@stat_tracker.worst_loss(@@query["team"].to_i)%></p>
+    <p>Best Season: <%=@@stat_tracker.best_season(@@query["team"])%></p>
+    <p>Worst Season: <%=@@stat_tracker.worst_season(@@query["team"])%></p>
+    <p>Average Win Percentage: <%=@@stat_tracker.average_win_percentage(@@query["team"])%></p>
+    <p>Most Goals Scored: <%=@@stat_tracker.most_goals_scored(@@query["team"])%></p>
+    <p>Fewest Goals Scored: <%=@@stat_tracker.fewest_goals_scored(@@query["team"])%></p>
+    <p>Favorite Oppenent: <%=@@stat_tracker.favorite_opponent(@@query["team"])%></p>
+    <p>Rival: <%=@@stat_tracker.rival(@@query["team"])%></p>
+    <p>Biggest Blowout: <%=@@stat_tracker.biggest_team_blowout(@@query["team"])%></p>
+    <p>Worst Loss: <%=@@stat_tracker.worst_loss(@@query["team"])%></p>
     <p>Head to Head:
     <table>
       <tr>
         <th>Opponent</th>
-        <th>Wins</th>
-        <th>Losses</th>
+        <th>Win Ratio</th>
       </tr>
-      <%@@stat_tracker.win_loss_record(@@query["team"].to_i).each do |team, record|%>
+      <%@@stat_tracker.win_loss_record(@@query["team"]).each do |team, record|%>
       <tr>
-        <td><%=@@stat_tracker.teams.find_by_id(team).short_name%></td>
-        <td><%=record[:wins]%></td>
-        <td><%=record[:losses]%></td>
+        <td><%=team%></td>
+        <td><%=record%></td>
       </tr>
       <%end%>
     </table>
     </p>
-    <%@@stat_tracker.seasonal_summary(@@query["team"].to_i).each do |key, value|%>
+    <%@@stat_tracker.seasonal_summary(@@query["team"]).each do |key, value|%>
     <h1><%=key%></h1>
-    <%value.each do |key, value|%>
-    <p><%=key%></p>
-    <table>
-      <tr>
-        <th>Win Percentage</th>
-        <th>Goals Scored</th>
-        <th>Goals Against</th>
-        <th>Average Goals Scored</th>
-        <th>Average Goals Against</th>
-      </tr>
-      <tr>
-        <td><%=value[:win_percentage]%></td>
-        <td><%=value[:goals_scored]%></td>
-        <td><%=value[:goals_against]%></td>
-        <td><%=value[:average_goals_scored]%></td>
-        <td><%=value[:average_goals_against]%></td>
-      </tr>
-    </table>
+      <%value.each do |key, value|%>
+      <p><%=key%></p>
+      <table>
+        <tr>
+          <th>Win Percentage</th>
+          <th>Goals Scored</th>
+          <th>Goals Against</th>
+          <th>Average Goals Scored</th>
+          <th>Average Goals Against</th>
+        </tr>
+        <tr>
+          <td><%=value[:win_percentage]%></td>
+          <td><%=value[:goals_scored]%></td>
+          <td><%=value[:goals_against]%></td>
+          <td><%=value[:average_goals_scored]%></td>
+          <td><%=value[:average_goals_against]%></td>
+        </tr>
+      </table>
+      <%end%>
     <%end%>
-    <%=@@stat_tracker.seasonal_summary(@@query["team"].to_i)%>
-    <%@@stat_tracker.seasonal_summary(@@query["team"].to_i).each do |season|%>
+    <%=@@stat_tracker.seasonal_summary(@@query["team"])%>
+    <%@@stat_tracker.seasonal_summary(@@query["team"]).each do |season|%>
     <p>Season: <%=season.first%>
       <%season.last.keys.each do |type|%>
       <p><%=type%>
