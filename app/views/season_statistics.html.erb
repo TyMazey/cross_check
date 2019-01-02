@@ -18,10 +18,10 @@
       </ul>
     </div>
     <h1>Season Statistics</h1>
-    <p>Biggest Bust: <%=@@stat_tracker.biggest_bust(@@query["season"].to_i)%></p>
-    <p>Biggest Surprise: <%=@@stat_tracker.biggest_surprise(@@query["season"].to_i)%></p>
+    <p>Biggest Bust: <%=@@stat_tracker.biggest_bust(@@query["season"])%></p>
+    <p>Biggest Surprise: <%=@@stat_tracker.biggest_surprise(@@query["season"])%></p>
     <%if @@query["team"]%>
-    <p>Summary: <%=@@stat_tracker.season_summary(@@query["season"].to_i, @@query["team"].to_i)%></p>
+    <p>Summary: <%=@@stat_tracker.season_summary(@@query["season"], @@query["team"])%></p>
     <%else%>
     <div class='team-option-grid'>
       <%@@stat_tracker.teams.all.each do |team|%>
