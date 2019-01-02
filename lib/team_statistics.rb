@@ -26,17 +26,6 @@ module TeamStatistics
 
   def average_win_percentage(team_id)
     calculate_win_percentage(team_id, @games.find_all_by_team(team_id))
-    # games_by_season = {
-    #   team_id => @games.group_games_by(:season, @games.find_all_by_team(team_id))
-    # }
-    # season_win_percentage = batch_map_hash_to_win_percentage(games_by_season)[team_id]
-    # total = season_win_percentage.sum do |season, win_percentage|
-    #   win_percentage
-    # end
-    # season_count = season_win_percentage.count
-    # require 'pry';binding.pry
-    # return (total / season_count).round(2) unless season_count == 0
-    # return 0.0
   end
 
   def most_goals_scored(team_id)
