@@ -56,6 +56,27 @@
       <%end%>
     </table>
     </p>
+    <%@@stat_tracker.seasonal_summary(@@query["team"].to_i).each do |key, value|%>
+    <h1><%=key%></h1>
+    <%value.each do |key, value|%>
+    <p><%=key%></p>
+    <table>
+      <tr>
+        <th>Win Percentage</th>
+        <th>Goals Scored</th>
+        <th>Goals Against</th>
+        <th>Average Goals Scored</th>
+        <th>Average Goals Against</th>
+      </tr>
+      <tr>
+        <td><%=value[:win_percentage]%></td>
+        <td><%=value[:goals_scored]%></td>
+        <td><%=value[:goals_against]%></td>
+        <td><%=value[:average_goals_scored]%></td>
+        <td><%=value[:average_goals_against]%></td>
+      </tr>
+    </table>
+    <%end%>
     <%=@@stat_tracker.seasonal_summary(@@query["team"].to_i)%>
     <%@@stat_tracker.seasonal_summary(@@query["team"].to_i).each do |season|%>
     <p>Season: <%=season.first%>
@@ -64,6 +85,7 @@
       </p>
       <%end%>
     </p>
+
     <%end%>
   </body>
 </html>
