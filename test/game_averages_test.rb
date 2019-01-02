@@ -33,8 +33,8 @@ class GameAveragesTest < Minitest::Test
     @game_2.stubs(outcome: "home", away_team_id: 6, home_team_id: 3)
     @game_3.stubs(outcome: "away", away_team_id: 3, home_team_id: 6)
 
-    assert_equal 66.67, @stat_tracker.calculate_win_percentage(3, @games)
-    assert_equal 33.33, @stat_tracker.calculate_win_percentage(6, @games)
+    assert_equal 0.67, @stat_tracker.calculate_win_percentage(3, @games)
+    assert_equal 0.33, @stat_tracker.calculate_win_percentage(6, @games)
     assert_equal 0.0, @stat_tracker.calculate_win_percentage(4, @games)
   end
 
@@ -50,10 +50,10 @@ class GameAveragesTest < Minitest::Test
     @stat_tracker.games.all << @game_3
 
 
-    twelve_thirteen = {3 => {"R" =>50.0},
-                       6 => {"R" => 50.0}}
+    twelve_thirteen = {3 => {"R" =>0.5},
+                       6 => {"R" => 0.5}}
 
-    thirteen_fourteen = {3 => {"R" => 100.0},
+    thirteen_fourteen = {3 => {"R" => 1.0},
                          6 => {"R" => 0.0}}
 
     assert_equal twelve_thirteen, @stat_tracker.get_win_ratios_by_season(20122013)
@@ -72,34 +72,33 @@ class GameAveragesTest < Minitest::Test
                     }
 
 
-    expected =  {3 => {20122013 =>50.0,
-                       20132014 => 100.0},
-                 6 => {20122013 => 50.0,
+    expected =  {3 => {20122013 =>0.5,
+                       20132014 => 1.0},
+                 6 => {20122013 => 0.5,
                        20132014 => 0.0}}
 
     assert_equal expected, @stat_tracker.batch_map_hash_to_win_percentage(grouped_games)
   end
-  
+
   def test_it_can_return_teams_win_loss_records
-       @game_1.stubs(outcome: "home", home_team_id: 1, away_team_id: 2)
-       @game_2.stubs(outcome: "away", home_team_id: 1, away_team_id: 2)
-       @game_3.stubs(outcome: "home", home_team_id: 2, away_team_id: 1)
+       @game_1.stubs(outcome: "home", home_team_id: "1", away_team_id: "2")
+       @game_2.stubs(outcome: "away", home_team_id: "1", away_team_id: "2")
+       @game_3.stubs(outcome: "home", home_team_id: "2", away_team_id: "1")
+       team_1 = mock
+       team_2 = mock("boo")
+       team_1.stubs(id: "1", team_name: "Ravens")
+       team_2.stubs(id: "2", team_name: "Slugs")
        @stat_tracker.games.all << @game_1
        @stat_tracker.games.all << @game_2
        @stat_tracker.games.all << @game_3
+       @stat_tracker.teams.all << team_1
+       @stat_tracker.teams.all << team_2
 
-         expected = {2 => {
-         :wins => 1,
-         :losses => 2
-         }
-       }
-       expected_1 = {1 => {
-         :wins => 2,
-         :losses => 1
-         }
-       }
 
-         assert_equal expected, @stat_tracker.win_loss_record(1)
-       assert_equal expected_1, @stat_tracker.win_loss_record(2)
+       expected_1 = {"Slugs" => 0.33}
+       expected_2 = {"Ravens" => 0.67}
+
+       assert_equal expected_1, @stat_tracker.win_loss_record("1")
+       assert_equal expected_2, @stat_tracker.win_loss_record("2")
      end
 end
