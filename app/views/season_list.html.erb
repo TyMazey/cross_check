@@ -19,7 +19,7 @@
     </div>
     <h1>Select a Season</h1>
     <%@@stat_tracker.games.group_games_by(:season).keys.each do |season|%>
-    <a href="season_statistics?season=<%=season%>"><%="#{season.to_s[0..3]} - #{season.to_s[4..-1]}"%></a>
+      <a href="season_statistics?season=<%=season%>"><%="#{season.to_s[0..3]} - #{season.to_s[4..-1]}"%></a>
     <%end%>
   </body>
 </html>
