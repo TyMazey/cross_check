@@ -31,7 +31,7 @@ module GameAverages
       (game.outcome.include?("home") && game.home_team_id == id) ||
       (game.outcome.include?("away") && game.away_team_id == id)
     end.to_f
-    return (wins / games.count * 100).round(2) unless games.count == 0
+    return (wins / games.count).round(2) unless games.count == 0
     return 0.0
   end
 

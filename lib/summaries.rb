@@ -25,18 +25,22 @@ module Summaries
 
   def generate_summary(selection, team_id, additional_statistics)
     summary = {}
-    summary[:win_percentage] = calculate_win_percentage(team_id, selection)
-    summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
-    summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
     if additional_statistics
       game_count = selection.count
+      summary[:win_percentage] = calculate_win_percentage(team_id, selection)
+      summary[:total_goals_scored] = goals_scored_by_team(selection)[team_id]
+      summary[:total_goals_against] = goals_allowed_by_team(selection)[team_id]
       if game_count == 0
         summary[:average_goals_scored] = 0.0
         summary[:average_goals_against] = 0.0
       else
-        summary[:average_goals_scored] = (summary[:goals_scored].to_f / game_count).round(2)
-        summary[:average_goals_against] = (summary[:goals_against].to_f / game_count).round(2)
+        summary[:average_goals_scored] = (summary[:total_goals_scored].to_f / game_count).round(2)
+        summary[:average_goals_against] = (summary[:total_goals_against].to_f / game_count).round(2)
       end
+    else
+      summary[:win_percentage] = calculate_win_percentage(team_id, selection)
+      summary[:goals_scored] = goals_scored_by_team(selection)[team_id]
+      summary[:goals_against] = goals_allowed_by_team(selection)[team_id]
     end
     summary
   end
