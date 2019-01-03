@@ -59,11 +59,11 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_determine_season_with_most_games
-    assert_equal "20122013", @stat_tracker.season_with_most_games
+    assert_equal 20122013, @stat_tracker.season_with_most_games
   end
 
   def test_it_can_determine_season_with_least_games
-    assert_equal "20122013", @stat_tracker.season_with_fewest_games
+    assert_equal 20122013, @stat_tracker.season_with_fewest_games
   end
 
   def test_it_can_count_games_by_season

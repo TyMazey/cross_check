@@ -44,13 +44,13 @@ module GameStatistics
   def season_with_most_games
     @games.group_games_by(:season).max_by do |season, games|
       games.count
-    end.first
+    end.first.to_i
   end
 
   def season_with_fewest_games
     @games.group_games_by(:season).min_by do |season, games|
       games.count
-    end.first
+    end.first.to_i
   end
 
   def count_of_games_by_season
