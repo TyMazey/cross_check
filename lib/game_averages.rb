@@ -56,16 +56,16 @@ module GameAverages
   end
 
   def win_loss_record(team)
-    games = {}
+    grouped_games = {}
     @games.find_all_by_team(team).each do |game|
-      games[game.home_team_id] = [] unless games[game.home_team_id]
-      games[game.away_team_id] = [] unless games[game.away_team_id]
-      games[game.home_team_id] << game
-      games[game.away_team_id] << game
+      grouped_games[game.home_team_id] = [] unless grouped_games[game.home_team_id]
+      grouped_games[game.away_team_id] = [] unless grouped_games[game.away_team_id]
+      grouped_games[game.home_team_id] << game
+      grouped_games[game.away_team_id] << game
     end
-    games.delete(team)
+    grouped_games.delete(team)
     final = {}
-    games.each do |current, games|
+    grouped_games.each do |current, games|
       final[@teams.find_by_id(current).team_name] = calculate_win_percentage(team, games)
     end
     return final
