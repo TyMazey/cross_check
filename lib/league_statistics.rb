@@ -10,29 +10,33 @@ module LeagueStatistics
   end
 
   def best_offense
+    games_by_team = @games.group_games_by_team
     highest_scoring = goals_scored_by_team.max_by do |team_id, total_goals|
-      total_goals.to_f / @games.find_all_by_team(team_id).count
+      total_goals.to_f / games_by_team[team_id].count
     end
     @teams.find_by_id(highest_scoring.first).team_name
   end
 
   def worst_offense
+    games_by_team = @games.group_games_by_team
     lowest_scoring = goals_scored_by_team.min_by do |team_id, total_goals|
-      total_goals.to_f / @games.find_all_by_team(team_id).count
+      total_goals.to_f / games_by_team[team_id].count
     end
     @teams.find_by_id(lowest_scoring.first).team_name
   end
 
   def best_defense
+    games_by_team = @games.group_games_by_team
     least_allowed = goals_allowed_by_team.min_by do |team_id, total_goals|
-      total_goals.to_f / @games.find_all_by_team(team_id).count
+      total_goals.to_f / games_by_team[team_id].count
     end
     @teams.find_by_id(least_allowed.first).team_name
   end
 
   def worst_defense
+    games_by_team = @games.group_games_by_team
     most_allowed = goals_allowed_by_team.max_by do |team_id, total_goals|
-      total_goals.to_f / @games.find_all_by_team(team_id).count
+      total_goals.to_f / games_by_team[team_id].count
     end
     @teams.find_by_id(most_allowed.first).team_name
   end
